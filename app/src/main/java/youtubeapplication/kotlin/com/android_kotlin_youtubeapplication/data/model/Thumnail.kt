@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Thumnail(
+data class Thumnail(
         @SerializedName("high")
-        var mHight: High
+        var mHight: High = High()
 ) : Parcelable

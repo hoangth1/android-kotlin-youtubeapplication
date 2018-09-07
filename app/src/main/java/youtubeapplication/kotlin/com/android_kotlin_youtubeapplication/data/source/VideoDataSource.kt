@@ -10,7 +10,7 @@ interface VideoDataSource {
     }
 
     interface Remote {
-        fun getListPopularVideo(key: String, chart: String,
+        fun getListPopularVideo(chart: String,
                                 part: String, maxResult: Int,
                                 regironCode: String): Single<VideoResponse>
     }

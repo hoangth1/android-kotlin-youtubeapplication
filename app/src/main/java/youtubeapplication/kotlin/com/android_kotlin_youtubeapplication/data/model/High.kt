@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class High(
+data class High(
         @SerializedName("url")
-        var mUrl: String
+        var mUrl: String = ""
 ) : Parcelable

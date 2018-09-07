@@ -6,9 +6,8 @@ import youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.data.sour
 import youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.data.source.response.VideoResponse
 
 class VideoRemoteDataSource(var api: Api) : VideoDataSource.Remote {
-    override fun getListPopularVideo(key: String,
-                                     chart: String, part: String,
+    override fun getListPopularVideo(                                     chart: String, part: String,
                                      maxResult: Int, regironCode:
                                      String): Single<VideoResponse> =
-            api.getPopularVideo(key, chart, regironCode, maxResult, part)
+            api.getPopularVideo(chart, regironCode, maxResult, part)
 }

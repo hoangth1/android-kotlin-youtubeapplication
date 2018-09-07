@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Video(
+data class Video(
         @SerializedName("id")
-        var mId: String,
+        var mId: String = "",
         @SerializedName("snippet")
-        var mSnipper:Snippet
+        var mSnipper: Snippet = Snippet()
 
 ) : Parcelable

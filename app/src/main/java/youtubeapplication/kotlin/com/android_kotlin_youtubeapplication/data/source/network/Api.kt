@@ -2,13 +2,14 @@ package youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.data.sou
 
 import io.reactivex.Single
 import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.Query
 import youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.data.source.response.VideoResponse
 
 interface Api {
+    @Headers("User-key: key=AIzaSyBiFmKOzifMjsphlfEIdTpBoVMzQJG5Uu8")
     @GET("videos")
-    fun getPopularVideo(@Query(PARAM_KEY) key: String,
-                        @Query(PARAM_CHART) char: String,
+    fun getPopularVideo(@Query(PARAM_CHART) char: String,
                         @Query(PARAM_REGION_CODE) regionCode: String,
                         @Query(PARAM_MAX_RESULT) maxResult: Int,
                         @Query(PARAM_PART) part: String): Single<VideoResponse>

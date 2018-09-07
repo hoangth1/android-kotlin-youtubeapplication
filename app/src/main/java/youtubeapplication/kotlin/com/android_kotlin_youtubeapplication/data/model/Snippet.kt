@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-class Snippet(
+data class Snippet(
         @SerializedName("publishedAt")
-        var mPublishedAt: String,
+        var mPublishedAt: String = "",
         @SerializedName("channelId")
-        var mChannelId: String,
+        var mChannelId: String = "",
         @SerializedName("title")
-        var mTitle: String,
+        var mTitle: String = "",
         @SerializedName("description")
-        var mDescription: String,
+        var mDescription: String = "",
         @SerializedName("thumbnails")
-        var mThumbnails: Thumnail,
+        var mThumbnails: Thumnail = Thumnail(),
         @SerializedName("channelTitle")
-        var mChannelTitle: String
+        var mChannelTitle: String = ""
 ) : Parcelable
