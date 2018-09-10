@@ -10,12 +10,13 @@ import android.view.ViewGroup
 
 abstract class BaseFragment<ViewBinding : ViewDataBinding,
         ViewModel : BaseViewModel> : Fragment() {
-
+    lateinit var viewModel: ViewModel
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val viewBinding: ViewBinding = DataBindingUtil.inflate(inflater, getLayoutResource(), container, false)
         val view = viewBinding.root
         viewBinding.setLifecycleOwner(this)
         initComponent(viewBinding);
+        lifecycle.addObserver(viewModel)
         return view
     }
 

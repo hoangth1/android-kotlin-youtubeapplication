@@ -5,4 +5,6 @@
     <color name="colorAccent">#FF4081</color>
     <color name="color_trinidad">#E65100</color>
     <color name="color_gold_drop">#F57C00</color>
+    <color name="color_black">#000000</color>
+    <color name="color_gray">#CCCCCC</color>
 </resources>

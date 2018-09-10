@@ -7,7 +7,7 @@ import retrofit2.http.Query
 import framgia.com.video.youtubevideo.data.source.response.VideoResponse
 
 interface Api {
-    @Headers("User-key: key=AIzaSyBiFmKOzifMjsphlfEIdTpBoVMzQJG5Uu8")
+
     @GET("videos")
     fun getPopularVideo(@Query(PARAM_CHART) char: String,
                         @Query(PARAM_REGION_CODE) regionCode: String,
@@ -25,6 +25,7 @@ interface Api {
         const val REGION_CODE_V = "VN"
         const val PARAM_PART = "part"
         const val PART_SNIPPET = "snippet"
+        const val PART_STATISTICS = "statistics"
         const val PARAM_REGION_CODE = "regionCode"
     }
 }

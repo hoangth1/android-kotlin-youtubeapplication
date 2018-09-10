@@ -9,6 +9,7 @@ data class Video(
         @SerializedName("id")
         var mId: String = "",
         @SerializedName("snippet")
-        var mSnipper: Snippet = Snippet()
-
+        var mSnipper: Snippet = Snippet(),
+        @SerializedName("statistics")
+        var statistics: Statistics
 ) : Parcelable
