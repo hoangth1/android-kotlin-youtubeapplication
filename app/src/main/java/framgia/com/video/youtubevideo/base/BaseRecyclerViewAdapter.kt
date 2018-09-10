@@ -7,15 +7,16 @@ import android.view.ViewGroup
 abstract class BaseRecyclerViewAdapter<Item,
         ItemViewDataBinding : ViewDataBinding,
         ViewHolder : BaseViewHolder<Item, ItemViewDataBinding>>(
-        var mData: MutableList<Item>) : RecyclerView.Adapter<ViewHolder>() {
+        var mData: List<Item>) : RecyclerView.Adapter<ViewHolder>() {
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 
+        holder.bindData(mData[position])
     }
 
     override fun getItemCount(): Int = mData.size
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
-            = getViewHolder(parent, viewType)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
+            getViewHolder(parent, viewType)
 
     abstract fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
 }

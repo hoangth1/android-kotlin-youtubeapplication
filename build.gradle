@@ -12,6 +12,8 @@ buildscript {
     ext.rxAdapterVersion = '1.0.0'
     ext.retrofitVersion = '2.4.0'
     ext.rxKotlinVersion = '2.1.0'
+    ext.dataBindingVerson = '3.1.3'
+    ext.glideVersion='4.8.0'
     repositories {
         google()
         jcenter()
