@@ -1,4 +1,4 @@
-package youtubeapplication.kotlin.com.android_kotlin_youtubeapplication
+package framgia.com.video.youtubevideo
 
 import org.junit.Test
 

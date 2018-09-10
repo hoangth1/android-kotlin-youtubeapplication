@@ -1,4 +1,4 @@
-package youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.base
+package framgia.com.video.youtubevideo.base
 
 import android.os.Bundle
 import android.support.v4.app.Fragment

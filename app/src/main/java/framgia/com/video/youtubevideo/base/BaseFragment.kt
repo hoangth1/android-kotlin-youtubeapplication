@@ -1,4 +1,4 @@
-package youtubeapplication.kotlin.com.android_kotlin_youtubeapplication.base
+package framgia.com.video.youtubevideo.base
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding

@@ -3,11 +3,13 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
-
+androidExtensions {
+    experimental = true
+}
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "youtubeapplication.kotlin.com.android_kotlin_youtubeapplication"
+        applicationId "framgia.com.video.youtubevideo"
         minSdkVersion 15
         targetSdkVersion 28
         versionCode 1
@@ -36,4 +38,9 @@ dependencies {
     implementation "com.android.support:design:$supportDesigeVersion"
     implementation "android.arch.lifecycle:extensions:$arch"
     annotationProcessor "android.arch.lifecycle:compiler:$arch"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "io.reactivex.rxjava2:rxjava:$rxJavaVersion"
+    implementation "io.reactivex.rxjava2:rxandroid:$rxAndroidVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:$rxAdapterVersion"
 }
