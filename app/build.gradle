@@ -47,4 +47,5 @@ dependencies {
     implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:$rxAdapterVersion"
     implementation "com.github.bumptech.glide:glide:$glideVersion"
     kapt "com.github.bumptech.glide:compiler:$glideVersion"
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 }

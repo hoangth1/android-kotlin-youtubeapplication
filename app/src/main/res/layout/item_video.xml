@@ -4,6 +4,10 @@
     <data>
 
         <variable
+            name="handleClick"
+            type="framgia.com.video.youtubevideo.screen.video.HandlerClick" />
+
+        <variable
             name="video"
             type="framgia.com.video.youtubevideo.data.model.Video" />
     </data>
@@ -12,7 +16,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_20">
+        android:layout_marginBottom="@dimen/dp_20"
+        android:onClick="@{()->handleClick.onClickItemVideo(video)}">
 
         <ImageView
             android:id="@+id/image_video"
