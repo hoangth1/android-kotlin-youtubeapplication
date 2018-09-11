@@ -5,14 +5,12 @@ import retrofit2.http.GET
 import retrofit2.http.Headers
 import retrofit2.http.Query
 import framgia.com.video.youtubevideo.data.source.response.VideoResponse
+import retrofit2.http.QueryMap
 
 interface Api {
 
     @GET("videos")
-    fun getPopularVideo(@Query(PARAM_CHART) char: String,
-                        @Query(PARAM_REGION_CODE) regionCode: String,
-                        @Query(PARAM_MAX_RESULT) maxResult: Int,
-                        @Query(PARAM_PART) part: String): Single<VideoResponse>
+    fun getPopularVideo(@QueryMap query:HashMap<String,String>): Single<VideoResponse>
 
     companion object {
         const val BASE_URL = "https://www.googleapis.com/youtube/v3/"

@@ -10,8 +10,6 @@ interface VideoDataSource {
     }
 
     interface Remote {
-        fun getListPopularVideo(chart: String,
-                                part: String, maxResult: Int,
-                                regironCode: String): Single<VideoResponse>
+        fun getListPopularVideo(query:HashMap<String,String>): Single<VideoResponse>
     }
 }

@@ -7,8 +7,6 @@ import kotlin.math.max
 
 class VideoRepository(val remote: VideoDataSource.Remote, val local: VideoDataSource.Local)
     : VideoDataSource.Remote, VideoDataSource.Local {
-    override fun getListPopularVideo(chart: String
-                                     , part: String, maxResult: Int,
-                                     regironCode: String): Single<VideoResponse> =
-            remote.getListPopularVideo(chart, part, maxResult, regironCode)
+    override fun getListPopularVideo(query: HashMap<String, String>): Single<VideoResponse> =
+            remote.getListPopularVideo(query)
 }
