@@ -1,7 +1,6 @@
 package framgia.com.video.youtubevideo.screen.video.adapter
 
 import android.databinding.DataBindingUtil
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import framgia.com.video.youtubevideo.R
@@ -12,13 +11,8 @@ import framgia.com.video.youtubevideo.databinding.ItemVideoBinding
 
 class ListVideoAdapter(mData: List<Video>) : BaseRecyclerViewAdapter<Video,
         ItemVideoBinding, ListVideoAdapter.ViewHolder>(mData) {
-    init {
-
-
-    }
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.d("kiemtra", mData[0].mSnipper.mTitle)
         val itemVideoBinding: ItemVideoBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
                 R.layout.item_video,

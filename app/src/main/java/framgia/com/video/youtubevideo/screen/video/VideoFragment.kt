@@ -11,20 +11,25 @@ import framgia.com.video.youtubevideo.screen.video.adapter.ListVideoAdapter
 import framgia.com.video.youtubevideo.utils.initViewModel
 
 class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>() {
+    companion object {
+        fun newInstance() = VideoFragment()
+    }
+
     override fun initComponent(viewBinding: FragmentVideoBinding) {
-        val activity: MainActivity = getActivity() as MainActivity
         viewModel = initViewModel(VideoViewModel::class.java)
         viewModel.listVideo.observe(this, Observer {
-            val adapter = ListVideoAdapter(it!!)
-            val layoutManager = LinearLayoutManager(activity)
-            viewBinding.recyclerVideo.adapter = adapter
-            viewBinding.recyclerVideo.layoutManager = layoutManager
-
+            val listVideoAdapter = ListVideoAdapter(it!!)
+            val lineaLayoutManager = LinearLayoutManager(context)
+            viewBinding.recyclerVideo.apply {
+                adapter = listVideoAdapter
+                layoutManager = lineaLayoutManager
+            }
         })
         viewModel.loadError.observe(this, Observer {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
 
     }
+
     override fun getLayoutResource(): Int = R.layout.fragment_video
 }

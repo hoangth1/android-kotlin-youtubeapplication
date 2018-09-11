@@ -7,5 +7,5 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Statistics(
         @SerializedName("viewCount")
-        var viewCount: String
+        var viewCount: String?
 ) : Parcelable

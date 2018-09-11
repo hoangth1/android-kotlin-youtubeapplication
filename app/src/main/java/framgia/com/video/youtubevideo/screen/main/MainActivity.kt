@@ -9,7 +9,7 @@ class MainActivity : BaseActivity() {
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun initComponent(savedInstanceState: Bundle?) {
-        addFragment(VideoFragment(), R.id.container, "")
+        addFragment(VideoFragment.newInstance(), R.id.container, "")
     }
 
     open fun hideActionBar() {
