@@ -8,8 +8,10 @@ import framgia.com.video.youtubevideo.base.BaseRecyclerViewAdapter
 import framgia.com.video.youtubevideo.base.BaseViewHolder
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.databinding.ItemVideoBinding
+import framgia.com.video.youtubevideo.screen.video.HandlerClick
+import framgia.com.video.youtubevideo.screen.video.OnItemVideoClick
 
-class ListVideoAdapter(mData: List<Video>) : BaseRecyclerViewAdapter<Video,
+class ListVideoAdapter(mData: List<Video>, val listener: OnItemVideoClick) : BaseRecyclerViewAdapter<Video,
         ItemVideoBinding, ListVideoAdapter.ViewHolder>(mData) {
 
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -19,6 +21,7 @@ class ListVideoAdapter(mData: List<Video>) : BaseRecyclerViewAdapter<Video,
                 parent,
                 false
         )
+        itemVideoBinding.handleClick = HandlerClick(listener)
         return ViewHolder(itemVideoBinding)
     }
 
