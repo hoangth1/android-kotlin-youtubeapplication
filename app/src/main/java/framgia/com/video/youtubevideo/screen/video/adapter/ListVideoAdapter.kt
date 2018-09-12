@@ -14,6 +14,7 @@ import framgia.com.video.youtubevideo.screen.video.OnItemVideoClick
 class ListVideoAdapter(mData: List<Video>, val listener: OnItemVideoClick) : BaseRecyclerViewAdapter<Video,
         ItemVideoBinding, ListVideoAdapter.ViewHolder>(mData) {
 
+
     override fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemVideoBinding: ItemVideoBinding = DataBindingUtil.inflate(
                 LayoutInflater.from(parent.context),
@@ -30,6 +31,5 @@ class ListVideoAdapter(mData: List<Video>, val listener: OnItemVideoClick) : Bas
         override fun bindData(item: Video) {
             itemBinding.video = item
         }
-
     }
 }

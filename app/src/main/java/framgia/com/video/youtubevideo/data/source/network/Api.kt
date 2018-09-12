@@ -10,8 +10,11 @@ import retrofit2.http.QueryMap
 interface Api {
 
     @GET("videos")
-    fun getPopularVideo(@QueryMap query:HashMap<String,String>): Single<VideoResponse>
+    fun getPopularVideo(@QueryMap query: HashMap<String, String>): Single<VideoResponse>
 
+    @GET("search")
+    fun getRelatedVideo(@QueryMap query: HashMap<String, String>): Single<VideoResponse>
+    
     companion object {
         const val BASE_URL = "https://www.googleapis.com/youtube/v3/"
         const val KEY = "AIzaSyBiFmKOzifMjsphlfEIdTpBoVMzQJG5Uu8"
@@ -25,5 +28,8 @@ interface Api {
         const val PART_SNIPPET = "snippet"
         const val PART_STATISTICS = "statistics"
         const val PARAM_REGION_CODE = "regionCode"
+        const val PARAM_TYPE = "type"
+        const val TYPE_VIDEO = "video"
+        const val PARAM_RELATED_VIDEO_ID = "relatedToVideoId"
     }
 }

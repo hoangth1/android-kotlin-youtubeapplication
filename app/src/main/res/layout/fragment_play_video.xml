@@ -3,6 +3,11 @@
 
     <data>
 
+        <import type="android.view.View" />
+
+        <variable
+            name="playVideoModel"
+            type="framgia.com.video.youtubevideo.screen.playvideo.PlayVideoViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -28,5 +33,14 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/container_video" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{playVideoModel.isLoading?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_related_video"
+            app:layout_constraintEnd_toEndOf="@id/recycler_related_video"
+            app:layout_constraintStart_toStartOf="@id/recycler_related_video"
+            app:layout_constraintTop_toTopOf="@id/recycler_related_video" />
     </android.support.constraint.ConstraintLayout>
 </layout>
