@@ -8,4 +8,7 @@ import io.reactivex.Single
 class VideoRemoteDataSource(var api: Api) : VideoDataSource.Remote {
     override fun getListPopularVideo(query: HashMap<String, String>): Single<VideoResponse> =
             api.getPopularVideo(query)
+
+    override fun getListRelatedVideo(query: HashMap<String, String>): Single<VideoResponse> =
+            api.getRelatedVideo(query)
 }

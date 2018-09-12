@@ -19,4 +19,5 @@ abstract class BaseRecyclerViewAdapter<Item,
             getViewHolder(parent, viewType)
 
     abstract fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
+    open fun bindFirstTime(itemViewDataBinding: ItemViewDataBinding) {}
 }
