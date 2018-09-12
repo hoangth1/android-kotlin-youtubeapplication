@@ -38,7 +38,10 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         youtubePlayerFragment.initialize(Api.KEY, this)
         viewModel.setVideoData(arguments?.get(BUNDLE_VIDEO) as Video)
         viewModel.listVideo.observe(this, Observer {
-            val relatedVideoAdapter = RelatedVideoAdapter(it!!, itemClickListener = { playSelectedVideo(it) })
+            if (it == null) {
+                return@Observer
+            }
+            val relatedVideoAdapter = RelatedVideoAdapter(it, itemClickListener = { playSelectedVideo(it) })
             val linearLayoutManager = LinearLayoutManager(context)
             viewBinding.recyclerRelatedVideo.apply {
                 adapter = relatedVideoAdapter
