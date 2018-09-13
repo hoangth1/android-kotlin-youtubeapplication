@@ -11,6 +11,6 @@ interface VideoDataSource {
 
     interface Remote {
         fun getListPopularVideo(query: HashMap<String, String>): Single<VideoResponse>
-        fun getListRelatedVideo(query: HashMap<String, String>): Single<VideoResponse>
+        fun searchVideo(query: HashMap<String, String>): Single<VideoResponse>
     }
 }
