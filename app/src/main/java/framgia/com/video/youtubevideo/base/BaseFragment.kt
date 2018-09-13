@@ -15,6 +15,7 @@ abstract class BaseFragment<ViewBinding : ViewDataBinding,
         val viewBinding: ViewBinding = DataBindingUtil.inflate(inflater, getLayoutResource(), container, false)
         val view = viewBinding.root
         viewBinding.setLifecycleOwner(this)
+        viewBinding.root.isClickable = true
         initComponent(viewBinding);
         lifecycle.addObserver(viewModel)
         return view

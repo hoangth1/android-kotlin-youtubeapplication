@@ -24,8 +24,7 @@ class SearchResultAdapter(mData: List<Video>,
         itemViewDataBinding.apply {
             root.setOnClickListener {
                 video.apply {
-                    if (this == null) return@setOnClickListener
-                    onItemClick.invoke(this)
+                    this?.let { onItemClick.invoke(this@apply) }
                 }
             }
         }

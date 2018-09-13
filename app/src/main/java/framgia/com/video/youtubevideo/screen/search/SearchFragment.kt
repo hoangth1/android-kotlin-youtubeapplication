@@ -36,8 +36,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
                 adapter = searchAdapter
             }
         })
-        if (bundle == null) return
-        viewModel.searchVideo(bundle.getString(BUNDLE_QUERY))
+        bundle?.let { viewModel.searchVideo(BUNDLE_QUERY) }
     }
 
     fun playVideo(video: Video) {
