@@ -17,20 +17,22 @@ abstract class BaseActivity : AppCompatActivity() {
     open fun addFragment(fragment: Fragment, container: Int, tag: String) {
         val fragmentTransaction = supportFragmentManager.beginTransaction()
                 .let {
-                    it.add(container, fragment)
-                    it.addToBackStack(tag)
-                    it.commit()
+                    it.apply {
+                        add(container, fragment)
+                        addToBackStack(tag)
+                        commit()
+                    }
                 }
     }
 
     open fun replaceFragment(fragment: Fragment, container: Int, tag: String) {
         val transaction = supportFragmentManager.beginTransaction()
                 .let {
-                    it.replace(container, fragment)
-                    it.addToBackStack(tag)
-                    it.commit()
+                    it.apply {
+                        replace(container, fragment)
+                        addToBackStack(tag)
+                        commit()
+                    }
                 }
-
     }
-
 }

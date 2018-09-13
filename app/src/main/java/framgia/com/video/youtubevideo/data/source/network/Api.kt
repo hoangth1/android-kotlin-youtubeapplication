@@ -13,8 +13,8 @@ interface Api {
     fun getPopularVideo(@QueryMap query: HashMap<String, String>): Single<VideoResponse>
 
     @GET("search")
-    fun getRelatedVideo(@QueryMap query: HashMap<String, String>): Single<VideoResponse>
-    
+    fun searchVideo(@QueryMap query: HashMap<String, String>): Single<VideoResponse>
+
     companion object {
         const val BASE_URL = "https://www.googleapis.com/youtube/v3/"
         const val KEY = "AIzaSyBiFmKOzifMjsphlfEIdTpBoVMzQJG5Uu8"
@@ -31,5 +31,6 @@ interface Api {
         const val PARAM_TYPE = "type"
         const val TYPE_VIDEO = "video"
         const val PARAM_RELATED_VIDEO_ID = "relatedToVideoId"
+        const val PARAM_QUERY = "q"
     }
 }
