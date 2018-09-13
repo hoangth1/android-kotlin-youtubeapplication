@@ -35,7 +35,7 @@
             android:textColor="@color/color_black"
             android:textSize="@dimen/sp_16"
             app:layout_constraintBottom_toTopOf="@id/text_channel_title"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/image_popup_menu"
             app:layout_constraintStart_toEndOf="@id/image_video"
             app:layout_constraintTop_toTopOf="@id/image_video" />
 
@@ -51,5 +51,12 @@
             app:layout_constraintEnd_toEndOf="@id/text_tile"
             app:layout_constraintStart_toStartOf="@id/text_tile"
             app:layout_constraintTop_toBottomOf="@id/text_tile" />
+
+        <ImageView
+            android:id="@+id/image_popup_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_vert_black"
+            app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
