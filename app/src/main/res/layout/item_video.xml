@@ -25,13 +25,12 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/dp_200"
             android:scaleType="centerCrop"
-            android:src="@mipmap/ic_launcher_round"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/text_title"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/dp_10"
             android:ellipsize="end"
@@ -39,19 +38,29 @@
             android:text="@{video.mSnipper.mTitle}"
             android:textColor="@color/color_black"
             android:textSize="@dimen/sp_20"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/image_popup_menu"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/image_video" />
 
         <TextView
             android:id="@+id/text_detail"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/dp_10"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="@dimen/dp_10"
             android:text="@{video.mSnipper.mChannelTitle}"
             android:textSize="@dimen/sp_16"
+            app:layout_constraintEnd_toEndOf="@id/image_popup_menu"
             app:layout_constraintStart_toStartOf="@id/text_title"
             app:layout_constraintTop_toBottomOf="@id/text_title" />
+
+        <ImageView
+            android:id="@+id/image_popup_menu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_vert_black"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/text_title" />
+
     </android.support.constraint.ConstraintLayout>
 </layout>

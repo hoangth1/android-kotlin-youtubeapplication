@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Youtube Mobile</string>
     <string name="title_search">Search</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_popular">Popular</string>
+    <string name="tile_about">About</string>
 </resources>
