@@ -5,8 +5,10 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 
 abstract class BaseFragment<ViewBinding : ViewDataBinding,
         ViewModel : BaseViewModel> : Fragment() {
@@ -38,6 +40,12 @@ abstract class BaseFragment<ViewBinding : ViewDataBinding,
             it.addToBackStack(tag)
             it.commit()
         }
+    }
 
+    fun addPopupMenu(menuRes: Int, view: View): PopupMenu {
+        return PopupMenu(context, view).apply {
+            menuInflater.inflate(menuRes, menu)
+            show()
+        }
     }
 }

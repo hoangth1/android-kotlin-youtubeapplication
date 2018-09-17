@@ -6,7 +6,10 @@ import framgia.com.video.youtubevideo.data.source.response.VideoResponse
 
 interface VideoDataSource {
     interface Local {
-
+        fun getVideos(): Single<List<Video>>
+        fun getVideo(id: String): Single<Video>
+        fun insertVideo(video: Video): Long
+        fun deleteVideo(video: Video)
     }
 
     interface Remote {

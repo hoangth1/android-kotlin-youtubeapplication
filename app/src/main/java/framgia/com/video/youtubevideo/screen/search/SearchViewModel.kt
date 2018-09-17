@@ -5,6 +5,7 @@ import android.arch.lifecycle.MutableLiveData
 import framgia.com.video.youtubevideo.base.BaseViewModel
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.local.VideoLocalDataSource
+import framgia.com.video.youtubevideo.data.source.local.database.VideoDatabase
 import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.data.source.network.Network
 import framgia.com.video.youtubevideo.data.source.remote.VideoRemoteDataSource
@@ -17,7 +18,7 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isLoadding = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
-            VideoLocalDataSource())
+            VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
 
     fun searchVideo(textQuery: String) {
         videoRepository.searchVideo(hashMapOf(
