@@ -29,4 +29,11 @@ abstract class BaseActivity : AppCompatActivity() {
             commit()
         }
     }
+
+    open fun replaceFragmentNotBackstack(fragment: Fragment, container: Int) {
+        supportFragmentManager.beginTransaction().apply {
+            replace(container, fragment)
+            commit()
+        }
+    }
 }

@@ -3,6 +3,9 @@ package framgia.com.video.youtubevideo.screen.playvideo
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.widget.Toast
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -31,6 +34,7 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
     }
 
     override fun initComponent(viewBinding: FragmentPlayVideoBinding) {
+        setHasOptionsMenu(true)
         viewModel = initViewModel(PlayVideoViewModel::class.java)
         viewBinding.playVideoModel = viewModel
         val youtubePlayerFragment = YouTubePlayerSupportFragment()
@@ -62,6 +66,22 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     fun playSelectedVideo(video: Video) {
         viewModel.setVideoData(video)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        menu?.apply {
+            clear()
+            inflater?.inflate(R.menu.fragment_play_video, this)
+        }
+        super.onCreateOptionsMenu(menu, inflater)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            R.id.item_favorite -> {
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
