@@ -18,7 +18,7 @@ class MainActivity : BaseActivity(), SearchView.OnQueryTextListener,
     override fun getLayout(): Int = R.layout.activity_main
 
     override fun initComponent(savedInstanceState: Bundle?) {
-        bottomNavigation.setOnNavigationItemSelectedListener(this)
+        bottom_navigation.setOnNavigationItemSelectedListener(this)
         addFragment(VideoFragment.newInstance(), R.id.container, "")
     }
 
