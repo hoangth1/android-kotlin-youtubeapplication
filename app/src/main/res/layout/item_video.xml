@@ -58,6 +58,7 @@
             android:id="@+id/image_popup_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:onClick="@{(v)->handleClick.onPopupButtonClick(video,v)}"
             android:src="@drawable/ic_more_vert_black"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@id/text_title" />

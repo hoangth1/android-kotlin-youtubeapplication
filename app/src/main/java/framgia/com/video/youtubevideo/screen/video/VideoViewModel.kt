@@ -7,22 +7,23 @@ import android.arch.lifecycle.OnLifecycleEvent
 import framgia.com.video.youtubevideo.base.BaseViewModel
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.local.VideoLocalDataSource
+import framgia.com.video.youtubevideo.data.source.local.database.VideoDatabase
 import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.data.source.network.Network
 import framgia.com.video.youtubevideo.data.source.remote.VideoRemoteDataSource
 import framgia.com.video.youtubevideo.data.source.repository.VideoRepository
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Action
-import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 
 class VideoViewModel(application: Application) : BaseViewModel(application) {
     val isLoadding = MutableLiveData<Boolean>()
     val listVideo = MutableLiveData<List<Video>>()
     val loadError = MutableLiveData<String>()
-    private val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
-            VideoLocalDataSource())
-
+    val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
+            VideoLocalDataSource(VideoDatabase.newInstance(application).videoDAO()))
+    val isInsertSuccessful = MutableLiveData<Boolean>()
+    val isInserted = MutableLiveData<Boolean>()
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun loadListVideo() {
         videoRepository.getListPopularVideo(hashMapOf(
@@ -46,4 +47,15 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 })
     }
 
+    fun addFavorite(video: Video) {
+        Observable.create<Long> { emitter ->
+            emitter.onNext(videoRepository.insertVideo(video))
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    isInsertSuccessful.value = true
+                }, {
+                    isInserted.value = true
+                })
+    }
 }

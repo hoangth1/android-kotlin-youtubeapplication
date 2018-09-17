@@ -1,5 +1,9 @@
 package framgia.com.video.youtubevideo.data.model
 
+import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Ignore
+import android.arch.persistence.room.PrimaryKey
 import android.os.Parcelable
 import com.google.gson.*
 import com.google.gson.annotations.SerializedName
@@ -7,15 +11,21 @@ import kotlinx.android.parcel.Parcelize
 import java.lang.reflect.Type
 
 @Parcelize
+@Entity(tableName = "video")
 data class Video(
+        @PrimaryKey(autoGenerate = false)
         var mId: String = "",
+        @Embedded
         @SerializedName("snippet")
         var mSnipper: Snippet = Snippet(),
+        @Embedded
         @SerializedName("statistics")
         var statistics: Statistics
 ) : Parcelable {
+    @Ignore
     @SerializedName("id")
     var videoId: Any? = null
+
     object DataStateDeserializer : JsonDeserializer<Video> {
         override fun deserialize(json: JsonElement?,
                                  typeOfT: Type?,

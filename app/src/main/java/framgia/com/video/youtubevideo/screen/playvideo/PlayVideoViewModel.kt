@@ -7,6 +7,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 import framgia.com.video.youtubevideo.base.BaseViewModel
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.local.VideoLocalDataSource
+import framgia.com.video.youtubevideo.data.source.local.database.VideoDatabase
 import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.data.source.network.Network
 import framgia.com.video.youtubevideo.data.source.remote.VideoRemoteDataSource
@@ -21,7 +22,7 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isLoading = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
-            VideoLocalDataSource())
+            VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
 
     fun setVideoData(video: Video) {
         videoPlay.value = video

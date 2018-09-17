@@ -2,6 +2,7 @@ package framgia.com.video.youtubevideo.screen.video
 
 import android.arch.lifecycle.Observer
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.widget.Toast
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
@@ -31,11 +32,26 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnIt
         viewModel.loadError.observe(this, Observer {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
+        viewModel.isInsertSuccessful.observe(this, Observer {
+            Toast.makeText(context, context?.getString(R.string.msg_insert_successfully), Toast.LENGTH_SHORT).show()
+        })
+        viewModel.isInserted.observe(this, Observer {
+            Toast.makeText(context, context?.getString(R.string.msg_video_exist), Toast.LENGTH_SHORT).show()
+        })
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
     override fun onVideoClick(video: Video) {
         val mainActivity = activity as MainActivity
         mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container, "")
+    }
+
+    override fun onPopupButtonClick(video: Video, view: View) {
+        addPopupMenu(R.menu.popup_menu_video, view).setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_addfavorite -> viewModel.addFavorite(video)
+            }
+            true
+        }
     }
 }

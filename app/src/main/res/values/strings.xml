@@ -4,4 +4,7 @@
     <string name="title_favorite">Favorite</string>
     <string name="title_popular">Popular</string>
     <string name="tile_about">About</string>
+    <string name="title_addfavorite">Add Favorite</string>
+    <string name="msg_insert_successfully">Add favorite successfully</string>
+    <string name="msg_video_exist">You already like this video</string>
 </resources>
