@@ -1,6 +1,7 @@
 package framgia.com.video.youtubevideo.screen.video
 
 import android.arch.lifecycle.Observer
+import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
@@ -13,13 +14,15 @@ import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
 import framgia.com.video.youtubevideo.screen.video.adapter.ListVideoAdapter
 import framgia.com.video.youtubevideo.utils.initViewModel
 
-class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnItemVideoClick {
+class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
+        OnItemVideoClick, SwipeRefreshLayout.OnRefreshListener {
     companion object {
         fun newInstance() = VideoFragment()
     }
 
     override fun initComponent(viewBinding: FragmentVideoBinding) {
         viewModel = initViewModel(VideoViewModel::class.java)
+        viewBinding.swipeRefresh.setOnRefreshListener(this)
         viewModel.listVideo.observe(this, Observer {
             val listVideoAdapter = ListVideoAdapter(it!!, this@VideoFragment)
             val lineaLayoutManager = LinearLayoutManager(context)
@@ -44,7 +47,9 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnIt
                 else -> Toast.makeText(context, getString(R.string.msg_not_added), Toast.LENGTH_SHORT).show()
             }
         })
-
+        viewModel.isRefresh.observe(this, Observer {
+            viewBinding.swipeRefresh.apply { isRefreshing = it == true }
+        })
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
@@ -62,4 +67,6 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnIt
             true
         }
     }
+
+    override fun onRefresh() = viewModel.refreshData()
 }
