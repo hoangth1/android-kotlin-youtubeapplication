@@ -1,9 +1,7 @@
 package framgia.com.video.youtubevideo.screen.playvideo
 
 import android.app.Application
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.OnLifecycleEvent
 import framgia.com.video.youtubevideo.base.BaseViewModel
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.local.VideoLocalDataSource
@@ -12,6 +10,7 @@ import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.data.source.network.Network
 import framgia.com.video.youtubevideo.data.source.remote.VideoRemoteDataSource
 import framgia.com.video.youtubevideo.data.source.repository.VideoRepository
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
@@ -21,6 +20,7 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
     val listVideo = MutableLiveData<List<Video>>()
     val isLoading = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
+    val isFavorite = MutableLiveData<Boolean>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
             VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
 
@@ -46,5 +46,31 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }, {
                     loadError.value = it.message
                 })
+    }
+
+    fun addFavorite(video: Video?) {
+        if (video == null) return
+        Observable.just(video).subscribeOn(Schedulers.io())
+                .doAfterTerminate {
+                    checkVideoAddedFavorite(video)
+                }.subscribe({ videoRepository.insertVideo(video) }, { })
+    }
+
+    fun deleteFavorite(video: Video?) {
+        if (video == null) return
+        Observable.just(video).subscribeOn(Schedulers.io())
+                .doAfterTerminate {
+                    checkVideoAddedFavorite(video)
+                }.subscribe({ videoRepository.deleteVideo(video) }, { })
+    }
+
+    fun checkVideoAddedFavorite(video: Video?) {
+        if (video == null) return
+        videoRepository.getVideo(video.mId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    isFavorite.value = true
+                }, { isFavorite.value = false })
     }
 }

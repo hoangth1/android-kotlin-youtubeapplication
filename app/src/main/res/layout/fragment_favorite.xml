@@ -3,6 +3,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="framgia.com.video.youtubevideo.screen.favorite.FavoriteViewModel" />
@@ -14,11 +16,21 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_favorite"
             android:layout_width="0dp"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{viewModel.isLoadding?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_favorite"
+            app:layout_constraintEnd_toEndOf="@id/recycler_favorite"
+            app:layout_constraintStart_toStartOf="@id/recycler_favorite"
+            app:layout_constraintTop_toTopOf="@id/recycler_favorite" />
     </android.support.constraint.ConstraintLayout>
 </layout>

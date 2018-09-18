@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="video"
+            type="framgia.com.video.youtubevideo.data.model.Video" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_120"
+        android:paddingLeft="@dimen/dp_10"
+        android:paddingRight="@dimen/dp_10">
+
+        <ImageView
+            android:id="@+id/image_video"
+            imageUrl="@{video.mSnipper.mThumbnails.mHight.mUrl}"
+            android:layout_width="@dimen/dp_140"
+            android:layout_height="@dimen/dp_100"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/text_tile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/dp_10"
+            android:layout_marginStart="@dimen/dp_10"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@{video.mSnipper.mTitle}"
+            android:textColor="@color/color_black"
+            android:textSize="@dimen/sp_16"
+            app:layout_constraintBottom_toTopOf="@id/text_channel_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_video"
+            app:layout_constraintTop_toTopOf="@id/image_video" />
+
+        <TextView
+            android:id="@+id/text_channel_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_5"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@{video.mSnipper.mChannelTitle}"
+            app:layout_constraintBottom_toBottomOf="@id/image_video"
+            app:layout_constraintEnd_toEndOf="@id/text_tile"
+            app:layout_constraintStart_toStartOf="@id/text_tile"
+            app:layout_constraintTop_toBottomOf="@id/text_tile" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>
