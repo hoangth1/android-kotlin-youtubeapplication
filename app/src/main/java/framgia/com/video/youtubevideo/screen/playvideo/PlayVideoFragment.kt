@@ -41,6 +41,7 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         addFramgent(youtubePlayerFragment, R.id.container_video, "")
         youtubePlayerFragment.initialize(Api.KEY, this)
         viewModel.setVideoData(arguments?.get(BUNDLE_VIDEO) as Video)
+        viewModel.checkVideoAddedFavorite(arguments?.get(BUNDLE_VIDEO) as Video)
         viewModel.listVideo.observe(this, Observer {
             if (it == null) {
                 return@Observer
@@ -76,9 +77,29 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         super.onCreateOptionsMenu(menu, inflater)
     }
 
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        viewModel.isFavorite.observe(this, Observer {
+            menu?.findItem(R.id.item_favorite).apply {
+                this?.setIcon(if (it!!) R.drawable.ic_favorite_fill_red else R.drawable.ic_favorite)
+            }
+        })
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             R.id.item_favorite -> {
+                viewModel.isFavorite.value.apply {
+                    if (this == null) return false
+                    when {
+                        this -> viewModel.apply {
+                            deleteFavorite(videoPlay.value)
+                        }
+                        else -> viewModel.apply {
+                            addFavorite(videoPlay.value)
+                        }
+                    }
+                }
             }
         }
         return super.onOptionsItemSelected(item)

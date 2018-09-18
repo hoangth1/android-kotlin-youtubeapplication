@@ -10,7 +10,7 @@ class VideoRepository(val remote: VideoDataSource.Remote, val local: VideoDataSo
     : VideoDataSource.Remote, VideoDataSource.Local {
     override fun getVideos(): Single<List<Video>> = local.getVideos()
 
-    override fun getVideo(id: String): Single<Video> = local.getVideo(id)
+    override fun getVideo(id: String) = local.getVideo(id)
 
     override fun insertVideo(video: Video) = local.insertVideo(video)
 
