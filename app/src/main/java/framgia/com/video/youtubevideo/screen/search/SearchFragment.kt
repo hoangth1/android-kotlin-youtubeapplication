@@ -2,8 +2,8 @@ package framgia.com.video.youtubevideo.screen.search
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
 import framgia.com.video.youtubevideo.data.model.Video
@@ -29,7 +29,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         viewBinding.searchViewModel = viewModel
         viewModel.searchResult.observe(this, Observer {
             if (it == null) return@Observer
-            val searchAdapter = SearchResultAdapter(it, onItemClick = { playVideo(it) })
+            val searchAdapter = SearchResultAdapter(it, onItemClick = { playVideo(it) }, onPopupClick = ::showPopupMenu)
             val lineaLayoutManager = LinearLayoutManager(context)
             viewBinding.recyclerSearchResult.apply {
                 layoutManager = lineaLayoutManager
@@ -42,6 +42,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     fun playVideo(video: Video) {
         val mainActivity = activity as MainActivity
         mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container, "")
+    }
+
+    fun showPopupMenu(video: Video, view: View) {
+        addPopupMenu(R.menu.popup_menu_video, view).setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_addfavorite -> viewModel.addFavorite(video)
+                R.id.item_removefavorite -> viewModel.removeFavorite(video)
+            }
+            true
+        }
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_search

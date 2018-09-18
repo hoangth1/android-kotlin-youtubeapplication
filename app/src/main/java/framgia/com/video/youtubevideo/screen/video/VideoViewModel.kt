@@ -24,6 +24,7 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
             VideoLocalDataSource(VideoDatabase.newInstance(application).videoDAO()))
     val isInsertSuccessful = MutableLiveData<Boolean>()
     val isInserted = MutableLiveData<Boolean>()
+    val isRemoveSuccesfull = MutableLiveData<Boolean>()
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun loadListVideo() {
         videoRepository.getListPopularVideo(hashMapOf(
@@ -57,5 +58,18 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 }, {
                     isInserted.value = true
                 })
+    }
+
+    fun removeFavorite(video: Video?) {
+        if (video == null) return
+        Observable.create<Int> { emitter ->
+            emitter.onNext(videoRepository.deleteVideo(video))
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .map {
+                    it != 0
+                }.subscribe({
+                    isRemoveSuccesfull.value = it
+                }, {})
     }
 }

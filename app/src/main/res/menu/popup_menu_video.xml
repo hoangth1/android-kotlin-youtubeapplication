@@ -3,4 +3,7 @@
     <item
         android:id="@+id/item_addfavorite"
         android:title="@string/title_addfavorite" />
+    <item
+        android:id="@+id/item_removefavorite"
+        android:title="@string/tilte_remove_favorite" />
 </menu>
