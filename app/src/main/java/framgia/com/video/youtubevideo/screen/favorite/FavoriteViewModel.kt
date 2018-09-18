@@ -16,6 +16,7 @@ class FavoriteViewModel(application: Application) : BaseViewModel(application) {
     val listFavorite = MutableLiveData<List<Video>>()
     val isLoadding = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
+    val isRefresh = MutableLiveData<Boolean>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
             VideoLocalDataSource(VideoDatabase.newInstance(application).videoDAO()))
 
@@ -24,6 +25,16 @@ class FavoriteViewModel(application: Application) : BaseViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { isLoadding.value = true }
                 .doAfterTerminate({ isLoadding.value = false })
+                .subscribe({ listFavorite.value = it }, {
+                    loadError.value = it.message
+                })
+    }
+
+    fun refreshData() {
+        videoRepository.getVideos().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { isRefresh.value = true }
+                .doAfterTerminate { isRefresh.value = false }
                 .subscribe({ listFavorite.value = it }, {
                     loadError.value = it.message
                 })

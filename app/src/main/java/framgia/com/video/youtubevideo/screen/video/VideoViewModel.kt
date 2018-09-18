@@ -25,6 +25,7 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
     val isInsertSuccessful = MutableLiveData<Boolean>()
     val isInserted = MutableLiveData<Boolean>()
     val isRemoveSuccesfull = MutableLiveData<Boolean>()
+    val isRefresh = MutableLiveData<Boolean>()
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun loadListVideo() {
         videoRepository.getListPopularVideo(hashMapOf(
@@ -40,6 +41,28 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 }
                 .doAfterTerminate {
                     isLoadding.value = false
+                }
+                .subscribe({
+                    listVideo.value = it.mListVideo
+                }, {
+                    loadError.value = it.message
+                })
+    }
+
+    fun refreshData() {
+        videoRepository.getListPopularVideo(hashMapOf(
+                Api.PARAM_PART to Api.PART_SNIPPET + "," + Api.PART_STATISTICS,
+                Api.PARAM_CHART to Api.CHART_MOST_POPULAR,
+                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
+                Api.PARAM_REGION_CODE to Api.REGION_CODE_V
+        ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    isRefresh.value = true
+                }
+                .doAfterTerminate {
+                    isRefresh.value = false
                 }
                 .subscribe({
                     listVideo.value = it.mListVideo
