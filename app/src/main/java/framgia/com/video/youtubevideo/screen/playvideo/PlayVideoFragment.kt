@@ -81,7 +81,7 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         super.onPrepareOptionsMenu(menu)
         viewModel.isFavorite.observe(this, Observer {
             menu?.findItem(R.id.item_favorite).apply {
-                this?.setIcon(if (it!!) R.drawable.ic_favorite_fill_red else R.drawable.ic_favorite)
+                this?.setIcon(if (it == true) R.drawable.ic_favorite_fill_red else R.drawable.ic_favorite)
             }
         })
     }

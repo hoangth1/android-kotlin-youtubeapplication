@@ -23,8 +23,8 @@ class FavoriteAdapter(mData: List<Video>,
         super.bindFirstTime(itemViewDataBinding)
         itemViewDataBinding.apply {
             root.setOnClickListener {
-                video.apply {
-                    this?.let { onItemClick.invoke(this@apply) }
+                video?.apply {
+                    onItemClick.invoke(this)
                 }
             }
         }
