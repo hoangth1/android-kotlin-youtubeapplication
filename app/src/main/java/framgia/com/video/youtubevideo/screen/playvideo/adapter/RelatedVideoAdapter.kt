@@ -11,7 +11,8 @@ import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.databinding.ItemRelatedVideoBinding
 
 class RelatedVideoAdapter(mData: List<Video>,
-                          val itemClickListener: (Video) -> Unit) : BaseRecyclerViewAdapter<Video,
+                          val itemClickListener: (Video) -> Unit,
+                          val onPopupClick: (Video, View) -> Unit) : BaseRecyclerViewAdapter<Video,
         ItemRelatedVideoBinding, RelatedVideoAdapter.ViewHolder>(mData) {
 
 
@@ -29,6 +30,11 @@ class RelatedVideoAdapter(mData: List<Video>,
             root.setOnClickListener(View.OnClickListener {
                 itemClickListener.invoke(video!!)
             })
+            imagePopupMenu.setOnClickListener {
+                video?.apply {
+                    onPopupClick.invoke(this, it)
+                }
+            }
         }
     }
 

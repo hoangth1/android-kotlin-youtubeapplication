@@ -38,6 +38,13 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnIt
         viewModel.isInserted.observe(this, Observer {
             Toast.makeText(context, context?.getString(R.string.msg_video_exist), Toast.LENGTH_SHORT).show()
         })
+        viewModel.isRemoveSuccesfull.observe(this, Observer {
+            when {
+                it == true -> Toast.makeText(context, getString(R.string.msg_remove_successfully), Toast.LENGTH_SHORT).show()
+                else -> Toast.makeText(context, getString(R.string.msg_not_added), Toast.LENGTH_SHORT).show()
+            }
+        })
+
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
@@ -50,6 +57,7 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(), OnIt
         addPopupMenu(R.menu.popup_menu_video, view).setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.item_addfavorite -> viewModel.addFavorite(video)
+                R.id.item_removefavorite -> viewModel.removeFavorite(video)
             }
             true
         }

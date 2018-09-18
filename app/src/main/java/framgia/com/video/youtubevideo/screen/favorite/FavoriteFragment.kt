@@ -28,7 +28,7 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding, FavoriteViewModel
             }
         })
         viewModel.loadError.observe(this, Observer {
-            Toast.makeText(context,it,Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
         viewModel.loadFavoriteVideo()
     }

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import com.google.android.youtube.player.YouTubeInitializationResult
 import com.google.android.youtube.player.YouTubePlayer
@@ -46,7 +47,8 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
             if (it == null) {
                 return@Observer
             }
-            val relatedVideoAdapter = RelatedVideoAdapter(it, itemClickListener = { playSelectedVideo(it) })
+            val relatedVideoAdapter = RelatedVideoAdapter(it, itemClickListener = { playSelectedVideo(it) },
+                    onPopupClick = ::showPopupMenu)
             val linearLayoutManager = LinearLayoutManager(context)
             viewBinding.recyclerRelatedVideo.apply {
                 adapter = relatedVideoAdapter
@@ -67,6 +69,16 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     fun playSelectedVideo(video: Video) {
         viewModel.setVideoData(video)
+    }
+
+    fun showPopupMenu(video: Video, view: View) {
+        addPopupMenu(R.menu.popup_menu_video, view).setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.item_addfavorite -> viewModel.addFavorite(video)
+                R.id.item_removefavorite -> viewModel.deleteFavorite(video)
+            }
+            true
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {

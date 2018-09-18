@@ -1,15 +1,15 @@
 package framgia.com.video.youtubevideo.data.source
 
-import io.reactivex.Single
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.response.VideoResponse
+import io.reactivex.Single
 
 interface VideoDataSource {
     interface Local {
         fun getVideos(): Single<List<Video>>
         fun getVideo(id: String): Single<Video>
         fun insertVideo(video: Video): Long
-        fun deleteVideo(video: Video)
+        fun deleteVideo(video: Video): Int
     }
 
     interface Remote {

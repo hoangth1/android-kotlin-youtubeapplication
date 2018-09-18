@@ -10,6 +10,7 @@ import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.data.source.network.Network
 import framgia.com.video.youtubevideo.data.source.remote.VideoRemoteDataSource
 import framgia.com.video.youtubevideo.data.source.repository.VideoRepository
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
@@ -19,7 +20,9 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val loadError = MutableLiveData<String>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
             VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
-
+    val isInsertSuccessful = MutableLiveData<Boolean>()
+    val isInserted = MutableLiveData<Boolean>()
+    val isRemoveSuccesfull = MutableLiveData<Boolean>()
     fun searchVideo(textQuery: String) {
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
@@ -38,5 +41,30 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }, {
                     loadError.value = it.message
                 })
+    }
+
+    fun addFavorite(video: Video) {
+        Observable.create<Long> { emitter ->
+            emitter.onNext(videoRepository.insertVideo(video))
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    isInsertSuccessful.value = true
+                }, {
+                    isInserted.value = true
+                })
+    }
+
+    fun removeFavorite(video: Video?) {
+        if (video == null) return
+        Observable.create<Int> { emitter ->
+            emitter.onNext(videoRepository.deleteVideo(video))
+
+        }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .map {
+                    it != 0
+                }.subscribe({
+                    isRemoveSuccesfull.value = it
+                }, {})
     }
 }

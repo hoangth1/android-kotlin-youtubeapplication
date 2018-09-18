@@ -18,9 +18,9 @@ data class Video(
         @Embedded
         @SerializedName("snippet")
         var mSnipper: Snippet = Snippet(),
-        @Embedded
+        @Ignore
         @SerializedName("statistics")
-        var statistics: Statistics
+        var statistics: Statistics? = null
 ) : Parcelable {
     @Ignore
     @SerializedName("id")

@@ -7,4 +7,7 @@
     <string name="title_addfavorite">Add Favorite</string>
     <string name="msg_insert_successfully">Add favorite successfully</string>
     <string name="msg_video_exist">You already like this video</string>
+    <string name="tilte_remove_favorite">Remove favorite</string>
+    <string name="msg_remove_successfully">Remove successfully</string>
+    <string name="msg_not_added">You have not added this video</string>
 </resources>

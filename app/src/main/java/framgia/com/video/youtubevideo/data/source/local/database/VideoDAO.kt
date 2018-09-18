@@ -16,5 +16,5 @@ interface VideoDAO {
     fun insertVideo(video: Video): Long
 
     @Delete
-    fun deleteVideo(video: Video)
+    fun deleteVideo(video: Video): Int
 }
