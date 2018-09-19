@@ -22,7 +22,7 @@ interface Api {
         const val PARAM_CHART = "chart"
         const val CHART_MOST_POPULAR = "mostPopular"
         const val PARAM_MAX_RESULT = "maxResults"
-        const val MAX_RESULT = 5
+        const val MAX_RESULT = 10
         const val REGION_CODE_V = "VN"
         const val PARAM_PART = "part"
         const val PART_SNIPPET = "snippet"

@@ -24,6 +24,7 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
     override fun initComponent(viewBinding: FragmentVideoBinding) {
         val endlessScrollListener = EndlessScrollListener { viewModel.onLoadMore() }
         viewModel = initViewModel(VideoViewModel::class.java)
+        viewModel.apply { loadListVideo(firstPage) }
         viewBinding.apply {
             swipeRefresh.setOnRefreshListener(this@VideoFragment)
             recyclerVideo.addOnScrollListener(endlessScrollListener)

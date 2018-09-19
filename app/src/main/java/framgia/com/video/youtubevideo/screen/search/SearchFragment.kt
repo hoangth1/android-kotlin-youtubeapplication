@@ -41,7 +41,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
                 adapter = searchAdapter
             }
         })
-        bundle.let { viewModel.searchVideo(bundle.getString(BUNDLE_QUERY)) }
+        bundle.let { viewModel.apply { searchVideo(bundle.getString(BUNDLE_QUERY), firstPage) } }
         viewModel.listVideoAdd.observe(this, Observer {
             (viewBinding.recyclerSearchResult.adapter as SearchResultAdapter).apply {
                 addData(it)

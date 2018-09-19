@@ -77,7 +77,7 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
     override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
         viewModel.videoPlay.observe(this, Observer {
             if (!p2) p1?.cueVideo(it?.mId)
-            viewModel.loadRelatedVideo()
+            viewModel.apply { loadRelatedVideo(firstPage) }
         })
     }
 

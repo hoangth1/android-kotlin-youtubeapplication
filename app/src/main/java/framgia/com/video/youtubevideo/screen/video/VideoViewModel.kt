@@ -1,9 +1,7 @@
 package framgia.com.video.youtubevideo.screen.video
 
 import android.app.Application
-import android.arch.lifecycle.Lifecycle
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.OnLifecycleEvent
 import framgia.com.video.youtubevideo.base.BaseViewModel
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.local.VideoLocalDataSource
@@ -17,7 +15,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class VideoViewModel(application: Application) : BaseViewModel(application) {
+    val firstPage = "-1"
     var nextPage = ""
+    var currentPage = ""
     val isLoadding = MutableLiveData<Boolean>()
     val listVideo = MutableLiveData<List<Video>>()
     val loadError = MutableLiveData<String>()
@@ -29,26 +29,42 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
     val isRefresh = MutableLiveData<Boolean>()
     val isLoadMore = MutableLiveData<Boolean>()
     val listVideoAdd = MutableLiveData<List<Video>>()
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    fun loadListVideo() {
+
+    fun loadListVideo(page: String) {
         videoRepository.getListPopularVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET + "," + Api.PART_STATISTICS,
                 Api.PARAM_CHART to Api.CHART_MOST_POPULAR,
                 Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
-                Api.PARAM_REGION_CODE to Api.REGION_CODE_V
+                Api.PARAM_REGION_CODE to Api.REGION_CODE_V,
+                Api.PARAM_PAGE_TOKEN to page
         ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    isLoadding.value = true
+                    when {
+                        page == firstPage && !(page == currentPage) -> isLoadding.value = true
+                        page == firstPage && page == currentPage -> isRefresh.value = true
+                        else -> isLoadMore.value = true
+                    }
                 }
                 .doAfterTerminate {
-                    isLoadding.value = false
+
+                    when {
+                        page == firstPage && !(page == currentPage) -> isLoadding.value = false
+                        page == firstPage && page == currentPage -> isRefresh.value = false
+                        else -> isLoadMore.value = false
+                    }
+                    currentPage = page
+
                 }
                 .subscribe({
                     it.apply {
-                        listVideo.value = mListVideo
                         nextPage = nextPageToken
+                        if (isLoadMore.value == true) {
+                            listVideoAdd.value = mListVideo
+                            return@apply
+                        }
+                        listVideo.value = mListVideo
                     }
                 }, {
                     loadError.value = it.message
@@ -56,34 +72,13 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
     }
 
     fun refreshData() {
-        videoRepository.getListPopularVideo(hashMapOf(
-                Api.PARAM_PART to Api.PART_SNIPPET + "," + Api.PART_STATISTICS,
-                Api.PARAM_CHART to Api.CHART_MOST_POPULAR,
-                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
-                Api.PARAM_REGION_CODE to Api.REGION_CODE_V
-        ))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    isRefresh.value = true
-                }
-                .doAfterTerminate {
-                    isRefresh.value = false
-                }
-                .subscribe({
-                    it.apply {
-                        listVideo.value = mListVideo
-                        nextPage = nextPageToken
-                    }
-                }, {
-                    loadError.value = it.message
-                })
+        currentPage = firstPage
+        loadListVideo(firstPage)
     }
 
     fun addFavorite(video: Video) {
         Observable.create<Long> { emitter ->
             emitter.onNext(videoRepository.insertVideo(video))
-
         }.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     isInsertSuccessful.value = true
@@ -105,29 +100,8 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 }, {})
     }
 
+
     fun onLoadMore() {
-        videoRepository.getListPopularVideo(hashMapOf(
-                Api.PARAM_PART to Api.PART_SNIPPET + "," + Api.PART_STATISTICS,
-                Api.PARAM_CHART to Api.CHART_MOST_POPULAR,
-                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
-                Api.PARAM_REGION_CODE to Api.REGION_CODE_V,
-                Api.PARAM_PAGE_TOKEN to nextPage
-        ))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe {
-                    isLoadMore.value = true
-                }
-                .doAfterTerminate {
-                    isLoadMore.value = false
-                }
-                .subscribe({
-                    it.apply {
-                        listVideoAdd.value = mListVideo
-                        nextPage = nextPageToken
-                    }
-                }, {
-                    loadError.value = it.message
-                })
+        loadListVideo(nextPage)
     }
 }
