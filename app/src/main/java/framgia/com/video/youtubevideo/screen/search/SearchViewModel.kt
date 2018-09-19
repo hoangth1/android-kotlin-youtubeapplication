@@ -15,6 +15,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
+    var nextPage = ""
     val searchResult = MutableLiveData<List<Video>>()
     val isLoadding = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
@@ -23,6 +24,8 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isInsertSuccessful = MutableLiveData<Boolean>()
     val isInserted = MutableLiveData<Boolean>()
     val isRemoveSuccesfull = MutableLiveData<Boolean>()
+    val listVideoAdd = MutableLiveData<List<Video>>()
+    val isLoadMore = MutableLiveData<Boolean>()
     fun searchVideo(textQuery: String) {
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
@@ -37,7 +40,12 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }.doAfterTerminate {
                     isLoadding.value = false
                 }.subscribe({
-                    searchResult.value = it.mListVideo
+                    it.apply {
+                        searchResult.value = mListVideo
+                        nextPage = nextPageToken
+                    }
+
+
                 }, {
                     loadError.value = it.message
                 })
@@ -66,5 +74,29 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }.subscribe({
                     isRemoveSuccesfull.value = it
                 }, {})
+    }
+
+    fun onLoadMore(textQuery: String) {
+        videoRepository.searchVideo(hashMapOf(
+                Api.PARAM_PART to Api.PART_SNIPPET,
+                Api.PARAM_TYPE to Api.TYPE_VIDEO,
+                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
+                Api.PARAM_QUERY to textQuery,
+                Api.PARAM_PAGE_TOKEN to nextPage
+        ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    isLoadMore.value = true
+                }.doAfterTerminate {
+                    isLoadMore.value = false
+                }.subscribe({
+                    it.apply {
+                        listVideoAdd.value = mListVideo
+                        nextPage = nextPageToken
+                    }
+                }, {
+                    loadError.value = it.message
+                })
     }
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
+import framgia.com.video.youtubevideo.base.EndlessScrollListener
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.databinding.FragmentSearchBinding
 import framgia.com.video.youtubevideo.screen.main.MainActivity
@@ -24,8 +25,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     }
 
     override fun initComponent(viewBinding: FragmentSearchBinding) {
-        val bundle: Bundle? = arguments
+        val bundle: Bundle = arguments ?: return
+        val endlessScrollListener = EndlessScrollListener {
+            viewModel.onLoadMore(bundle.getString(BUNDLE_QUERY))
+        }
         viewModel = initViewModel(SearchViewModel::class.java)
+        viewBinding.recyclerSearchResult.addOnScrollListener(endlessScrollListener)
         viewBinding.searchViewModel = viewModel
         viewModel.searchResult.observe(this, Observer {
             if (it == null) return@Observer
@@ -36,7 +41,17 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
                 adapter = searchAdapter
             }
         })
-        bundle?.let { viewModel.searchVideo(BUNDLE_QUERY) }
+        bundle.let { viewModel.searchVideo(bundle.getString(BUNDLE_QUERY)) }
+        viewModel.listVideoAdd.observe(this, Observer {
+            (viewBinding.recyclerSearchResult.adapter as SearchResultAdapter).apply {
+                addData(it)
+            }
+        })
+        viewModel.isLoadMore.observe(this, Observer {
+            it?.apply {
+                endlessScrollListener.isLoadding = it
+            }
+        })
     }
 
     fun playVideo(video: Video) {

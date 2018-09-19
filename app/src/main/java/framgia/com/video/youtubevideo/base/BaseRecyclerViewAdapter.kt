@@ -7,17 +7,29 @@ import android.view.ViewGroup
 abstract class BaseRecyclerViewAdapter<Item,
         ItemViewDataBinding : ViewDataBinding,
         ViewHolder : BaseViewHolder<Item, ItemViewDataBinding>>(
-        var mData: List<Item>) : RecyclerView.Adapter<ViewHolder>() {
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        mData: List<Item>) : RecyclerView.Adapter<ViewHolder>() {
+    val listData = arrayListOf<Item>()
 
-        holder.bindData(mData[position])
+    init {
+        listData.addAll(mData)
     }
 
-    override fun getItemCount(): Int = mData.size
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        holder.bindData(listData[position])
+    }
+
+    override fun getItemCount(): Int = listData.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder =
             getViewHolder(parent, viewType)
 
     abstract fun getViewHolder(parent: ViewGroup, viewType: Int): ViewHolder
     open fun bindFirstTime(itemViewDataBinding: ItemViewDataBinding) {}
+    fun addData(data: List<Item>?) {
+        data?.apply {
+            listData.addAll(this)
+            notifyItemRangeChanged(listData.size, data.size)
+        }
+
+    }
 }

@@ -21,6 +21,9 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isLoading = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
     val isFavorite = MutableLiveData<Boolean>()
+    val isLoadMore = MutableLiveData<Boolean>()
+    val listVideoAdd = MutableLiveData<List<Video>>()
+    var nexPage = ""
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
             VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
 
@@ -42,7 +45,10 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }.doAfterTerminate(Action {
                     isLoading.value = false
                 }).subscribe({
-                    listVideo.value = it.mListVideo
+                    it.apply {
+                        listVideo.value = mListVideo
+                        nexPage = nextPageToken
+                    }
                 }, {
                     loadError.value = it.message
                 })
@@ -72,5 +78,29 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
                 .subscribe({
                     isFavorite.value = true
                 }, { isFavorite.value = false })
+    }
+
+    fun onLoadMore() {
+        videoRepository.searchVideo(hashMapOf(
+                Api.PARAM_PART to Api.PART_SNIPPET,
+                Api.PARAM_TYPE to Api.TYPE_VIDEO,
+                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
+                Api.PARAM_RELATED_VIDEO_ID to videoPlay.value!!.mId,
+                Api.PARAM_PAGE_TOKEN to nexPage
+        ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    isLoadMore.value = true
+                }.doAfterTerminate(Action {
+                    isLoadMore.value = false
+                }).subscribe({
+                    it.apply {
+                        nexPage = nextPageToken
+                        listVideoAdd.value = mListVideo
+                    }
+                }, {
+                    loadError.value = it.message
+                })
     }
 }

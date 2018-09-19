@@ -17,6 +17,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class VideoViewModel(application: Application) : BaseViewModel(application) {
+    var nextPage = ""
     val isLoadding = MutableLiveData<Boolean>()
     val listVideo = MutableLiveData<List<Video>>()
     val loadError = MutableLiveData<String>()
@@ -26,6 +27,8 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
     val isInserted = MutableLiveData<Boolean>()
     val isRemoveSuccesfull = MutableLiveData<Boolean>()
     val isRefresh = MutableLiveData<Boolean>()
+    val isLoadMore = MutableLiveData<Boolean>()
+    val listVideoAdd = MutableLiveData<List<Video>>()
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     fun loadListVideo() {
         videoRepository.getListPopularVideo(hashMapOf(
@@ -43,7 +46,10 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                     isLoadding.value = false
                 }
                 .subscribe({
-                    listVideo.value = it.mListVideo
+                    it.apply {
+                        listVideo.value = mListVideo
+                        nextPage = nextPageToken
+                    }
                 }, {
                     loadError.value = it.message
                 })
@@ -65,7 +71,10 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                     isRefresh.value = false
                 }
                 .subscribe({
-                    listVideo.value = it.mListVideo
+                    it.apply {
+                        listVideo.value = mListVideo
+                        nextPage = nextPageToken
+                    }
                 }, {
                     loadError.value = it.message
                 })
@@ -94,5 +103,31 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 }.subscribe({
                     isRemoveSuccesfull.value = it
                 }, {})
+    }
+
+    fun onLoadMore() {
+        videoRepository.getListPopularVideo(hashMapOf(
+                Api.PARAM_PART to Api.PART_SNIPPET + "," + Api.PART_STATISTICS,
+                Api.PARAM_CHART to Api.CHART_MOST_POPULAR,
+                Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
+                Api.PARAM_REGION_CODE to Api.REGION_CODE_V,
+                Api.PARAM_PAGE_TOKEN to nextPage
+        ))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe {
+                    isLoadMore.value = true
+                }
+                .doAfterTerminate {
+                    isLoadMore.value = false
+                }
+                .subscribe({
+                    it.apply {
+                        listVideoAdd.value = mListVideo
+                        nextPage = nextPageToken
+                    }
+                }, {
+                    loadError.value = it.message
+                })
     }
 }

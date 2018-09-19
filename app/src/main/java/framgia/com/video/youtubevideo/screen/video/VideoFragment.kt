@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.Toast
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
+import framgia.com.video.youtubevideo.base.EndlessScrollListener
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.databinding.FragmentVideoBinding
 import framgia.com.video.youtubevideo.screen.main.MainActivity
@@ -21,35 +22,52 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
     }
 
     override fun initComponent(viewBinding: FragmentVideoBinding) {
+        val endlessScrollListener = EndlessScrollListener { viewModel.onLoadMore() }
         viewModel = initViewModel(VideoViewModel::class.java)
-        viewBinding.swipeRefresh.setOnRefreshListener(this)
-        viewModel.listVideo.observe(this, Observer {
-            val listVideoAdapter = ListVideoAdapter(it!!, this@VideoFragment)
-            val lineaLayoutManager = LinearLayoutManager(context)
+        viewBinding.apply {
+            swipeRefresh.setOnRefreshListener(this@VideoFragment)
+            recyclerVideo.addOnScrollListener(endlessScrollListener)
+        }
+        viewModel.apply {
+            listVideo.observe(this@VideoFragment, Observer {
+                val listVideoAdapter = ListVideoAdapter(it!!, this@VideoFragment)
+                val lineaLayoutManager = LinearLayoutManager(context)
 
-            viewBinding.recyclerVideo.apply {
-                adapter = listVideoAdapter
-                layoutManager = lineaLayoutManager
-            }
-        })
-        viewModel.loadError.observe(this, Observer {
-            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
-        })
-        viewModel.isInsertSuccessful.observe(this, Observer {
-            Toast.makeText(context, context?.getString(R.string.msg_insert_successfully), Toast.LENGTH_SHORT).show()
-        })
-        viewModel.isInserted.observe(this, Observer {
-            Toast.makeText(context, context?.getString(R.string.msg_video_exist), Toast.LENGTH_SHORT).show()
-        })
-        viewModel.isRemoveSuccesfull.observe(this, Observer {
-            when {
-                it == true -> Toast.makeText(context, getString(R.string.msg_remove_successfully), Toast.LENGTH_SHORT).show()
-                else -> Toast.makeText(context, getString(R.string.msg_not_added), Toast.LENGTH_SHORT).show()
-            }
-        })
-        viewModel.isRefresh.observe(this, Observer {
-            viewBinding.swipeRefresh.apply { isRefreshing = it == true }
-        })
+                viewBinding.recyclerVideo.apply {
+                    adapter = listVideoAdapter
+                    layoutManager = lineaLayoutManager
+                }
+            })
+            loadError.observe(this@VideoFragment, Observer {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            })
+            isInsertSuccessful.observe(this@VideoFragment, Observer {
+                Toast.makeText(context, context?.getString(R.string.msg_insert_successfully), Toast.LENGTH_SHORT).show()
+            })
+            isInserted.observe(this@VideoFragment, Observer {
+                Toast.makeText(context, context?.getString(R.string.msg_video_exist), Toast.LENGTH_SHORT).show()
+            })
+            isRemoveSuccesfull.observe(this@VideoFragment, Observer {
+                when {
+                    it == true -> Toast.makeText(context, getString(R.string.msg_remove_successfully), Toast.LENGTH_SHORT).show()
+                    else -> Toast.makeText(context, getString(R.string.msg_not_added), Toast.LENGTH_SHORT).show()
+                }
+            })
+            isRefresh.observe(this@VideoFragment, Observer {
+                viewBinding.swipeRefresh.apply { isRefreshing = it == true }
+            })
+            isLoadMore.observe(this@VideoFragment, Observer {
+                if (it == null) return@Observer
+                endlessScrollListener.isLoadding = it
+                if (it) viewBinding.progressbarLoadmore.visibility = View.VISIBLE else viewBinding.progressbarLoadmore.visibility = View.GONE
+            })
+            listVideoAdd.observe(this@VideoFragment, Observer {
+                (viewBinding.recyclerVideo.adapter as ListVideoAdapter).apply {
+                    addData(it)
+                }
+            })
+        }
+
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
