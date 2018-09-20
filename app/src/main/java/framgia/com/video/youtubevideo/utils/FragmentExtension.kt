@@ -7,3 +7,4 @@ import android.support.v4.app.Fragment
 
 fun <V : AndroidViewModel> Fragment.initViewModel(viewModel: Class<V>) =
         ViewModelProviders.of(this).get(viewModel)
+

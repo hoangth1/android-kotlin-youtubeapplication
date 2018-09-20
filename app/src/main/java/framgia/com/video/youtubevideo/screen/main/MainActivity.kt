@@ -1,5 +1,7 @@
 package framgia.com.video.youtubevideo.screen.main
 
+import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
@@ -15,13 +17,20 @@ import framgia.com.video.youtubevideo.screen.video.VideoFragment
 import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity(), SearchView.OnQueryTextListener,
+class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListener,
         BottomNavigationView.OnNavigationItemSelectedListener {
     var menuItem: MenuItem? = null
     override fun getLayout(): Int = R.layout.activity_main
     override fun initComponent(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
+        viewModel.titleMain.observe(this, Observer {
+            title = it
+        })
+        viewModel.isVisibleBackButton.observe(this, Observer {
+            if (it == true) showArrowBackButton() else hideArrowBackButton()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -57,18 +66,4 @@ class MainActivity : BaseActivity(), SearchView.OnQueryTextListener,
         }
         return true
     }
-
-    override fun onBackPressed() {
-        val fragments = supportFragmentManager.fragments
-        if (fragments.size <= 2) {
-            finish()
-        }
-        for (fragment in fragments) {
-            when (fragment) {
-                is SearchFragment -> fragment.onBackPress()
-                is PlayVideoFragment -> fragment.onBackPress()
-            }
-        }
-    }
-
 }

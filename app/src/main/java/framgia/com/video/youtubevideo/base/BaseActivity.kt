@@ -1,11 +1,12 @@
 package framgia.com.video.youtubevideo.base
 
+import android.arch.lifecycle.ViewModel
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.app.AppCompatActivity
 
-abstract class BaseActivity : AppCompatActivity() {
-
+abstract class BaseActivity<ViewModel : BaseViewModel> : AppCompatActivity() {
+    lateinit var viewModel: ViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(getLayout())
@@ -38,12 +39,17 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     fun showArrowBackButton() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(true);
-        supportActionBar?.setDisplayShowHomeEnabled(true);
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
+
     }
 
     fun hideArrowBackButton() {
-        supportActionBar?.setDisplayHomeAsUpEnabled(false);
-        supportActionBar?.setDisplayShowHomeEnabled(false);
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(false)
+            setDisplayShowHomeEnabled(false)
+        }
     }
 }
