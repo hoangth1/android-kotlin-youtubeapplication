@@ -5,7 +5,6 @@ import android.databinding.ViewDataBinding
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -20,6 +19,7 @@ abstract class BaseFragment<ViewBinding : ViewDataBinding,
         viewBinding.root.isClickable = true
         initComponent(viewBinding);
         lifecycle.addObserver(viewModel)
+
         return view
     }
 
@@ -39,6 +39,13 @@ abstract class BaseFragment<ViewBinding : ViewDataBinding,
             it.replace(container, fragment)
             it.addToBackStack(tag)
             it.commit()
+        }
+    }
+
+    open fun replaceFragmentNotBackstack(fragment: Fragment, container: Int) {
+        childFragmentManager.beginTransaction().apply {
+            replace(container, fragment)
+            commit()
         }
     }
 

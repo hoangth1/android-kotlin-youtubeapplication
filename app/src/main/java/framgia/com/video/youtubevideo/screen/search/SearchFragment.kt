@@ -1,8 +1,11 @@
 package framgia.com.video.youtubevideo.screen.search
 
 import android.arch.lifecycle.Observer
+import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.view.MenuItem
 import android.view.View
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
@@ -10,11 +13,15 @@ import framgia.com.video.youtubevideo.base.EndlessScrollListener
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.databinding.FragmentSearchBinding
 import framgia.com.video.youtubevideo.screen.main.MainActivity
+import framgia.com.video.youtubevideo.screen.main.MainViewModel
 import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
 import framgia.com.video.youtubevideo.screen.search.adapter.SearchResultAdapter
+import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
 class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
+    lateinit var activityViewModel: MainViewModel
+
     companion object {
         const val BUNDLE_QUERY = "query"
         fun newInstance(stringQuery: String) = SearchFragment().apply {
@@ -24,8 +31,22 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
         }
     }
 
+    override fun onAttach(context: Context?) {
+        super.onAttach(context)
+        if (activity is MainActivity) {
+            (activity as MainActivity).apply {
+                activityViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+            }
+        }
+    }
+
     override fun initComponent(viewBinding: FragmentSearchBinding) {
+        setHasOptionsMenu(true)
         val bundle: Bundle = arguments ?: return
+        activityViewModel.apply {
+            titleMain.value = bundle.getString(BUNDLE_QUERY)
+            isVisibleBackButton.value = true
+        }
         val endlessScrollListener = EndlessScrollListener {
             viewModel.onLoadMore(bundle.getString(BUNDLE_QUERY))
         }
@@ -56,7 +77,8 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
     fun playVideo(video: Video) {
         val mainActivity = activity as MainActivity
-        mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container, "")
+        mainActivity.replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
+                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
     }
 
     fun showPopupMenu(video: Video, view: View) {
@@ -67,6 +89,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
             }
             true
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> fragmentManager?.popBackStack()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_search
