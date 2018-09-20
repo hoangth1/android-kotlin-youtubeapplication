@@ -13,6 +13,7 @@ import com.google.android.youtube.player.YouTubePlayer
 import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
+import framgia.com.video.youtubevideo.base.EndlessScrollListener
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.databinding.FragmentPlayVideoBinding
@@ -36,6 +37,8 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     override fun initComponent(viewBinding: FragmentPlayVideoBinding) {
         setHasOptionsMenu(true)
+        val endlessScrollListener = EndlessScrollListener { viewModel.onLoadMore() }
+        viewBinding.recyclerRelatedVideo.addOnScrollListener(endlessScrollListener)
         viewModel = initViewModel(PlayVideoViewModel::class.java)
         viewBinding.playVideoModel = viewModel
         val youtubePlayerFragment = YouTubePlayerSupportFragment()
@@ -58,12 +61,23 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         viewModel.loadError.observe(this, Observer {
             Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
         })
+        viewModel.listVideoAdd.observe(this, Observer {
+            (viewBinding.recyclerRelatedVideo.adapter as RelatedVideoAdapter).apply {
+                addData(it)
+            }
+        })
+        viewModel.isLoadMore.observe(this, Observer {
+            it?.apply {
+                endlessScrollListener.isLoadding = it
+            }
+        })
+
     }
 
     override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
         viewModel.videoPlay.observe(this, Observer {
             if (!p2) p1?.cueVideo(it?.mId)
-            viewModel.loadRelatedVideo()
+            viewModel.apply { loadRelatedVideo(firstPage) }
         })
     }
 

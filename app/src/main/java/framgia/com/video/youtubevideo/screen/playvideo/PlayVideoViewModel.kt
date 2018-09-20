@@ -16,11 +16,15 @@ import io.reactivex.functions.Action
 import io.reactivex.schedulers.Schedulers
 
 class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
+    val firstPage = "-1"
+    var nextPage = ""
     val videoPlay = MutableLiveData<Video>()
     val listVideo = MutableLiveData<List<Video>>()
     val isLoading = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
     val isFavorite = MutableLiveData<Boolean>()
+    val isLoadMore = MutableLiveData<Boolean>()
+    val listVideoAdd = MutableLiveData<List<Video>>()
     val videoRepository = VideoRepository(VideoRemoteDataSource(Network.getApi()),
             VideoLocalDataSource(VideoDatabase.newInstance(aplication).videoDAO()))
 
@@ -28,21 +32,38 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
         videoPlay.value = video
     }
 
-    fun loadRelatedVideo() {
+    fun loadRelatedVideo(page: String) {
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
                 Api.PARAM_TYPE to Api.TYPE_VIDEO,
                 Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
-                Api.PARAM_RELATED_VIDEO_ID to videoPlay.value!!.mId
+                Api.PARAM_RELATED_VIDEO_ID to videoPlay.value!!.mId,
+                Api.PARAM_PAGE_TOKEN to page
         ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    isLoading.value = true
-                }.doAfterTerminate(Action {
-                    isLoading.value = false
-                }).subscribe({
-                    listVideo.value = it.mListVideo
+                    when {
+                        page == firstPage -> isLoading.value = true
+                        else -> isLoadMore.value = true
+                    }
+                }
+                .doAfterTerminate {
+
+                    when {
+                        page.equals(firstPage) -> isLoading.value = false
+                        else -> isLoadMore.value = false
+                    }
+                }
+                .subscribe({
+                    it.apply {
+                        nextPage = nextPageToken
+                        if (isLoadMore.value == true) {
+                            listVideoAdd.value = mListVideo
+                            return@apply
+                        }
+                        listVideo.value = mListVideo
+                    }
                 }, {
                     loadError.value = it.message
                 })
@@ -72,5 +93,9 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
                 .subscribe({
                     isFavorite.value = true
                 }, { isFavorite.value = false })
+    }
+
+    fun onLoadMore() {
+        loadRelatedVideo(nextPage)
     }
 }

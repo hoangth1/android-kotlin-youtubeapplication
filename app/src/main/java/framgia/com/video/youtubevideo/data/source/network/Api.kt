@@ -22,7 +22,7 @@ interface Api {
         const val PARAM_CHART = "chart"
         const val CHART_MOST_POPULAR = "mostPopular"
         const val PARAM_MAX_RESULT = "maxResults"
-        const val MAX_RESULT = 20
+        const val MAX_RESULT = 10
         const val REGION_CODE_V = "VN"
         const val PARAM_PART = "part"
         const val PART_SNIPPET = "snippet"
@@ -32,5 +32,6 @@ interface Api {
         const val TYPE_VIDEO = "video"
         const val PARAM_RELATED_VIDEO_ID = "relatedToVideoId"
         const val PARAM_QUERY = "q"
+        const val PARAM_PAGE_TOKEN = "pageToken"
     }
 }

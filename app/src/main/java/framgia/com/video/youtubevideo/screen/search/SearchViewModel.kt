@@ -15,6 +15,8 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 
 class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
+    val firstPage = "-1"
+    var nextPage = ""
     val searchResult = MutableLiveData<List<Video>>()
     val isLoadding = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
@@ -23,21 +25,39 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isInsertSuccessful = MutableLiveData<Boolean>()
     val isInserted = MutableLiveData<Boolean>()
     val isRemoveSuccesfull = MutableLiveData<Boolean>()
-    fun searchVideo(textQuery: String) {
+    val listVideoAdd = MutableLiveData<List<Video>>()
+    val isLoadMore = MutableLiveData<Boolean>()
+    fun searchVideo(textQuery: String, page: String) {
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
                 Api.PARAM_TYPE to Api.TYPE_VIDEO,
                 Api.PARAM_MAX_RESULT to Api.MAX_RESULT.toString(),
-                Api.PARAM_QUERY to textQuery
+                Api.PARAM_QUERY to textQuery,
+                Api.PARAM_PAGE_TOKEN to page
         ))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
-                    isLoadding.value = true
-                }.doAfterTerminate {
-                    isLoadding.value = false
-                }.subscribe({
-                    searchResult.value = it.mListVideo
+                    when {
+                        page == firstPage -> isLoadding.value = true
+                        else -> isLoadMore.value = true
+                    }
+                }
+                .doAfterTerminate {
+                    when {
+                        page == firstPage -> isLoadding.value = false
+                        else -> isLoadMore.value = false
+                    }
+                }
+                .subscribe({
+                    it.apply {
+                        nextPage = nextPageToken
+                        if (isLoadMore.value == true) {
+                            listVideoAdd.value = mListVideo
+                            return@apply
+                        }
+                        searchResult.value = mListVideo
+                    }
                 }, {
                     loadError.value = it.message
                 })
@@ -66,5 +86,9 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
                 }.subscribe({
                     isRemoveSuccesfull.value = it
                 }, {})
+    }
+
+    fun onLoadMore(textQuery: String) {
+        searchVideo(textQuery, nextPage)
     }
 }

@@ -41,5 +41,13 @@
             app:layout_constraintEnd_toEndOf="@id/recycler_related_video"
             app:layout_constraintStart_toStartOf="@id/recycler_related_video"
             app:layout_constraintTop_toTopOf="@id/recycler_related_video" />
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="@{playVideoModel.isLoadMore?View.VISIBLE:View.GONE}"
+            app:layout_constraintBottom_toBottomOf="@id/recycler_related_video"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </layout>
