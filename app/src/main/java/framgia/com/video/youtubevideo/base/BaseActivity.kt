@@ -36,4 +36,14 @@ abstract class BaseActivity : AppCompatActivity() {
             commit()
         }
     }
+
+    fun showArrowBackButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(true);
+        supportActionBar?.setDisplayShowHomeEnabled(true);
+    }
+
+    fun hideArrowBackButton() {
+        supportActionBar?.setDisplayHomeAsUpEnabled(false);
+        supportActionBar?.setDisplayShowHomeEnabled(false);
+    }
 }

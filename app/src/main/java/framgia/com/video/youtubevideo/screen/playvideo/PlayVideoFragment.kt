@@ -2,6 +2,7 @@ package framgia.com.video.youtubevideo.screen.playvideo
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.v4.app.FragmentManager
 import android.support.v7.widget.LinearLayoutManager
 import android.view.Menu
 import android.view.MenuInflater
@@ -14,14 +15,17 @@ import com.google.android.youtube.player.YouTubePlayerSupportFragment
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
 import framgia.com.video.youtubevideo.base.EndlessScrollListener
+import framgia.com.video.youtubevideo.base.OnBackPressed
 import framgia.com.video.youtubevideo.data.model.Video
 import framgia.com.video.youtubevideo.data.source.network.Api
 import framgia.com.video.youtubevideo.databinding.FragmentPlayVideoBinding
+import framgia.com.video.youtubevideo.screen.main.MainActivity
 import framgia.com.video.youtubevideo.screen.playvideo.adapter.RelatedVideoAdapter
+import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
 class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewModel>(),
-        YouTubePlayer.OnInitializedListener {
+        YouTubePlayer.OnInitializedListener, OnBackPressed {
 
     companion object {
         private const val BUNDLE_VIDEO = "video"
@@ -37,12 +41,16 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     override fun initComponent(viewBinding: FragmentPlayVideoBinding) {
         setHasOptionsMenu(true)
+        (activity as MainActivity).apply {
+            showArrowBackButton()
+            title = (arguments?.get(BUNDLE_VIDEO) as Video).mSnipper.mTitle
+        }
         val endlessScrollListener = EndlessScrollListener { viewModel.onLoadMore() }
         viewBinding.recyclerRelatedVideo.addOnScrollListener(endlessScrollListener)
         viewModel = initViewModel(PlayVideoViewModel::class.java)
         viewBinding.playVideoModel = viewModel
         val youtubePlayerFragment = YouTubePlayerSupportFragment()
-        addFramgent(youtubePlayerFragment, R.id.container_video, "")
+        replaceFragmentNotBackstack(youtubePlayerFragment, R.id.container_video)
         youtubePlayerFragment.initialize(Api.KEY, this)
         viewModel.setVideoData(arguments?.get(BUNDLE_VIDEO) as Video)
         viewModel.checkVideoAddedFavorite(arguments?.get(BUNDLE_VIDEO) as Video)
@@ -127,12 +135,25 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
                     }
                 }
             }
+            android.R.id.home -> handelBack()
         }
         return super.onOptionsItemSelected(item)
     }
+
+    override fun onBackPress() = handelBack()
 
     override fun onInitializationFailure(p0: YouTubePlayer.Provider?, p1: YouTubeInitializationResult?) {
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_play_video
+
+    fun handelBack() {
+        fragmentManager?.popBackStack(FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT
+                , FragmentManager.POP_BACK_STACK_INCLUSIVE)
+        (activity as MainActivity).apply {
+            hideArrowBackButton()
+            title = getString(R.string.app_name)
+        }
+    }
+
 }

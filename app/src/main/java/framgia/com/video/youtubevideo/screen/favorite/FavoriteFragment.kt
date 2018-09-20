@@ -11,6 +11,7 @@ import framgia.com.video.youtubevideo.databinding.FragmentFavoriteBinding
 import framgia.com.video.youtubevideo.screen.favorite.adapter.FavoriteAdapter
 import framgia.com.video.youtubevideo.screen.main.MainActivity
 import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
+import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
 class FavoriteFragment : BaseFragment<FragmentFavoriteBinding, FavoriteViewModel>(),
@@ -41,7 +42,8 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding, FavoriteViewModel
 
     fun playVideo(video: Video) {
         val mainActivity = activity as MainActivity
-        mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container, "")
+        mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container,
+                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
     }
 
     override fun onRefresh() = viewModel.refreshData()

@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers
 
 class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
     val firstPage = "-1"
-    var nextPage = ""
+    var nextPage: String? = null
     val videoPlay = MutableLiveData<Video>()
     val listVideo = MutableLiveData<List<Video>>()
     val isLoading = MutableLiveData<Boolean>()
@@ -32,7 +32,8 @@ class PlayVideoViewModel(aplication: Application) : BaseViewModel(aplication) {
         videoPlay.value = video
     }
 
-    fun loadRelatedVideo(page: String) {
+    fun loadRelatedVideo(page: String?) {
+        if (page == null) return
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
                 Api.PARAM_TYPE to Api.TYPE_VIDEO,

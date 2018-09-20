@@ -13,6 +13,7 @@ import framgia.com.video.youtubevideo.databinding.FragmentVideoBinding
 import framgia.com.video.youtubevideo.screen.main.MainActivity
 import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
 import framgia.com.video.youtubevideo.screen.video.adapter.ListVideoAdapter
+import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
 class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
@@ -74,7 +75,8 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
     override fun getLayoutResource(): Int = R.layout.fragment_video
     override fun onVideoClick(video: Video) {
         val mainActivity = activity as MainActivity
-        mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container, "")
+        mainActivity.addFragment(PlayVideoFragment.newInstance(video), R.id.container,
+                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
     }
 
     override fun onPopupButtonClick(video: Video, view: View) {

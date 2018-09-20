@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
 
 class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val firstPage = "-1"
-    var nextPage = ""
+    var nextPage: String? = null
     val searchResult = MutableLiveData<List<Video>>()
     val isLoadding = MutableLiveData<Boolean>()
     val loadError = MutableLiveData<String>()
@@ -27,7 +27,8 @@ class SearchViewModel(aplication: Application) : BaseViewModel(aplication) {
     val isRemoveSuccesfull = MutableLiveData<Boolean>()
     val listVideoAdd = MutableLiveData<List<Video>>()
     val isLoadMore = MutableLiveData<Boolean>()
-    fun searchVideo(textQuery: String, page: String) {
+    fun searchVideo(textQuery: String, page: String?) {
+        if (page == null) return
         videoRepository.searchVideo(hashMapOf(
                 Api.PARAM_PART to Api.PART_SNIPPET,
                 Api.PARAM_TYPE to Api.TYPE_VIDEO,

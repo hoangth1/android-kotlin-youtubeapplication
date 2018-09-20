@@ -42,6 +42,13 @@ abstract class BaseFragment<ViewBinding : ViewDataBinding,
         }
     }
 
+    open fun replaceFragmentNotBackstack(fragment: Fragment, container: Int) {
+        childFragmentManager.beginTransaction().apply {
+            replace(container, fragment)
+            commit()
+        }
+    }
+
     fun addPopupMenu(menuRes: Int, view: View): PopupMenu {
         return PopupMenu(context, view).apply {
             menuInflater.inflate(menuRes, menu)
