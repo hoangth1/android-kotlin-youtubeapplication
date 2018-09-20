@@ -42,16 +42,18 @@ class VideoViewModel(application: Application) : BaseViewModel(application) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe {
                     when {
-                        page == firstPage && !(page == currentPage) -> isLoadding.value = true
-                        page == firstPage && page == currentPage -> isRefresh.value = true
+                        page == firstPage && !(firstPage == currentPage) ->
+                            isLoadding.value = true
+                        page == firstPage && firstPage == currentPage ->
+                            isRefresh.value = true
                         else -> isLoadMore.value = true
                     }
                 }
                 .doAfterTerminate {
 
                     when {
-                        page == firstPage && !(page == currentPage) -> isLoadding.value = false
-                        page == firstPage && page == currentPage -> isRefresh.value = false
+                        page == firstPage && !(firstPage == currentPage) -> isLoadding.value = false
+                        page == firstPage && firstPage == currentPage -> isRefresh.value = false
                         else -> isLoadMore.value = false
                     }
                     currentPage = page
