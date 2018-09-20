@@ -39,8 +39,8 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
     override fun initComponent(viewBinding: FragmentVideoBinding) {
         viewModel = initViewModel(VideoViewModel::class.java)
         activityViewModel.apply {
-            isVisibleBackButton.value=false
-            titleMain.value=getString(R.string.title_popular)
+            isVisibleBackButton.value = false
+            titleMain.value = getString(R.string.title_popular)
         }
         val endlessScrollListener = EndlessScrollListener { viewModel.onLoadMore() }
         viewModel.apply { loadListVideo(firstPage) }
@@ -86,16 +86,20 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
                     addData(it)
                 }
             })
+            isLoadding.observe(this@VideoFragment, Observer {
+                if (it == true) viewBinding.progressbar.visibility = View.VISIBLE else viewBinding.progressbar.visibility = View.GONE
+            })
         }
-
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
     override fun onVideoClick(video: Video) {
-        val mainActivity = activity as MainActivity
-        mainActivity.replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
-
-                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
+        if (activity is MainActivity)
+            (activity as MainActivity).apply {
+                replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
+                        FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
+            }
+        viewModel.currentPage = ""
     }
 
     override fun onPopupButtonClick(video: Video, view: View) {
