@@ -38,6 +38,7 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
 
     override fun initComponent(viewBinding: FragmentVideoBinding) {
         viewModel = initViewModel(VideoViewModel::class.java)
+        viewBinding.videoViewModel = viewModel
         activityViewModel.apply {
             isVisibleBackButton.value = false
             titleMain.value = getString(R.string.title_popular)
@@ -86,9 +87,9 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
                     addData(it)
                 }
             })
-            isLoadding.observe(this@VideoFragment, Observer {
-                if (it == true) viewBinding.progressbar.visibility = View.VISIBLE else viewBinding.progressbar.visibility = View.GONE
-            })
+//            isLoadding.observe(this@VideoFragment, Observer {
+//                if (it == true) viewBinding.progressbar.visibility = View.VISIBLE else viewBinding.progressbar.visibility = View.GONE
+//            })
         }
     }
 

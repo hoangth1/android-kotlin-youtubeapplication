@@ -30,7 +30,7 @@ import framgia.com.video.youtubevideo.utils.initViewModel
 class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewModel>(),
         YouTubePlayer.OnInitializedListener {
     lateinit var activityViewModel: MainViewModel
-    var youtubePlayer: YouTubePlayer? = null
+    var videoPlayer: YouTubePlayer? = null
 
     companion object {
         private const val BUNDLE_VIDEO = "video"
@@ -92,10 +92,10 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     }
 
-    override fun onInitializationSuccess(p0: YouTubePlayer.Provider?, p1: YouTubePlayer?, p2: Boolean) {
-        youtubePlayer = p1
+    override fun onInitializationSuccess(provider: YouTubePlayer.Provider?, player: YouTubePlayer?, isSuccess: Boolean) {
+        videoPlayer = player
         viewModel.videoPlay.observe(this, Observer {
-            if (!p2) p1?.cueVideo(it?.mId)
+            if (!isSuccess) player?.cueVideo(it?.mId)
             viewModel.apply { loadRelatedVideo(firstPage) }
             activityViewModel.apply {
                 isVisibleBackButton.value = true
@@ -164,6 +164,6 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
-        if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) youtubePlayer?.setFullscreen(true)
+        if (newConfig?.orientation == Configuration.ORIENTATION_LANDSCAPE) videoPlayer?.setFullscreen(true)
     }
 }
