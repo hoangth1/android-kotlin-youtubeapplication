@@ -95,6 +95,7 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
     override fun onInitializationSuccess(provider: YouTubePlayer.Provider?, player: YouTubePlayer?, isSuccess: Boolean) {
         videoPlayer = player
         viewModel.videoPlay.observe(this, Observer {
+            viewModel.checkVideoAddedFavorite(it)
             if (!isSuccess) player?.cueVideo(it?.mId)
             viewModel.apply { loadRelatedVideo(firstPage) }
             activityViewModel.apply {
