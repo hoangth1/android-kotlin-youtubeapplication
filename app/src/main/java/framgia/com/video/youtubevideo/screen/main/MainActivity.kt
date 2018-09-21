@@ -66,4 +66,6 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
         }
         return true
     }
+
+    fun checkInternetConnection():Boolean{z}
 }
