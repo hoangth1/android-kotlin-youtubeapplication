@@ -11,4 +11,7 @@
     <string name="msg_remove_successfully">Remove successfully</string>
     <string name="msg_not_added">You have not added this video</string>
     <string name="title_author">Author: Thang Huy Hoang</string>
+    <string name="title_oops">Oops</string>
+    <string name="msg_connect_internet_failure">You don\'t have internet. Please connect to internet and try again</string>
+    <string name="title_try_again">Try again</string>
 </resources>

@@ -1,10 +1,17 @@
 package framgia.com.video.youtubevideo.screen.main
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
+import android.content.DialogInterface
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
+import android.support.v7.widget.AlertDialogLayout
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import framgia.com.video.youtubevideo.R
@@ -15,6 +22,7 @@ import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
 import framgia.com.video.youtubevideo.screen.search.SearchFragment
 import framgia.com.video.youtubevideo.screen.video.VideoFragment
 import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
+import kotlinx.android.synthetic.main.abc_tooltip.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListener,
@@ -23,14 +31,32 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
     override fun getLayout(): Int = R.layout.activity_main
     override fun initComponent(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel.isInternetConnected.observe(this, Observer {
+            if (it == true) replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
+            else showInformationDialog()
+        })
+        viewModel.checkInternetConnection()
         bottom_navigation.setOnNavigationItemSelectedListener(this)
-        replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
         viewModel.titleMain.observe(this, Observer {
             title = it
         })
         viewModel.isVisibleBackButton.observe(this, Observer {
             if (it == true) showArrowBackButton() else hideArrowBackButton()
         })
+
+    }
+
+    private fun showInformationDialog() {
+        val builder = AlertDialog.Builder(this).apply {
+            setTitle(getString(R.string.title_oops))
+            setMessage(getString(R.string.msg_connect_internet_failure))
+            setPositiveButton(getString(R.string.title_try_again)) { dialog, which ->
+                viewModel.checkInternetConnection()
+                dialog.dismiss()
+            }
+            create().show()
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -66,6 +92,4 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
         }
         return true
     }
-
-    fun checkInternetConnection():Boolean{z}
 }
