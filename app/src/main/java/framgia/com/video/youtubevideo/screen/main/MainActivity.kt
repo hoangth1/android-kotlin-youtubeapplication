@@ -1,7 +1,9 @@
 package framgia.com.video.youtubevideo.screen.main
 
+import android.app.AlertDialog
 import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
+import android.content.Context
 import android.os.Bundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
@@ -23,6 +25,11 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
     override fun getLayout(): Int = R.layout.activity_main
     override fun initComponent(savedInstanceState: Bundle?) {
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
+        viewModel.isInternetConnected.observe(this, Observer {
+            if (it == true) replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
+            else showInformationDialog()
+        })
+        viewModel.checkInternetConnection(Context.CONNECTIVITY_SERVICE)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
         replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
         viewModel.titleMain.observe(this, Observer {
@@ -53,6 +60,19 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
 
     override fun onQueryTextChange(newText: String?): Boolean {
         return false
+    }
+
+    private fun showInformationDialog() {
+        val builder = AlertDialog.Builder(this).apply {
+            setTitle(getString(R.string.title_oops))
+            setMessage(getString(R.string.msg_connect_internet_failure))
+            setPositiveButton(getString(R.string.title_try_again)) { dialog, which ->
+                viewModel.checkInternetConnection(Context.CONNECTIVITY_SERVICE)
+                dialog.dismiss()
+            }
+            create().show()
+        }
+
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
