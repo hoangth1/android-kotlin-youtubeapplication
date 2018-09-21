@@ -13,6 +13,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".screen.main.MainActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppThemeNormal">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
