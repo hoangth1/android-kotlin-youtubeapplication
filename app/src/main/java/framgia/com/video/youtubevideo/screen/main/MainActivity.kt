@@ -31,7 +31,6 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
         })
         viewModel.checkInternetConnection(Context.CONNECTIVITY_SERVICE)
         bottom_navigation.setOnNavigationItemSelectedListener(this)
-        replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
         viewModel.titleMain.observe(this, Observer {
             title = it
         })
@@ -66,6 +65,7 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
         val builder = AlertDialog.Builder(this).apply {
             setTitle(getString(R.string.title_oops))
             setMessage(getString(R.string.msg_connect_internet_failure))
+            setCancelable(false)
             setPositiveButton(getString(R.string.title_try_again)) { dialog, which ->
                 viewModel.checkInternetConnection(Context.CONNECTIVITY_SERVICE)
                 dialog.dismiss()
