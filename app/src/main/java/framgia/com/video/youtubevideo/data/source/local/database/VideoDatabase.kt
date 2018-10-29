@@ -5,7 +5,6 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import framgia.com.video.youtubevideo.data.model.Video
-import kotlin.reflect.KClass
 
 @Database(entities = [Video::class], version = 1)
 abstract class VideoDatabase : RoomDatabase() {
@@ -20,3 +19,4 @@ abstract class VideoDatabase : RoomDatabase() {
     }
 
 }
+
