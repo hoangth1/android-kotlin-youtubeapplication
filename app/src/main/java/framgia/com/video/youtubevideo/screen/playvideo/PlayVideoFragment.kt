@@ -32,17 +32,6 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
     lateinit var activityViewModel: MainViewModel
     var videoPlayer: YouTubePlayer? = null
 
-    companion object {
-        private const val BUNDLE_VIDEO = "video"
-        fun newInstance(video: Video): PlayVideoFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_VIDEO, video)
-            val playVideoFragment = PlayVideoFragment().apply {
-                arguments = bundle
-            }
-            return playVideoFragment
-        }
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
@@ -62,8 +51,9 @@ class PlayVideoFragment : BaseFragment<FragmentPlayVideoBinding, PlayVideoViewMo
         val youtubePlayerFragment = YouTubePlayerSupportFragment()
         replaceFragmentNotBackstack(youtubePlayerFragment, R.id.container_video)
         youtubePlayerFragment.initialize(Api.KEY, this)
-        viewModel.setVideoData(arguments?.get(BUNDLE_VIDEO) as Video)
-        viewModel.checkVideoAddedFavorite(arguments?.get(BUNDLE_VIDEO) as Video)
+        viewModel.setVideoData(PlayVideoFragmentArgs.fromBundle(arguments ?: return).video)
+        viewModel.checkVideoAddedFavorite(PlayVideoFragmentArgs.fromBundle(arguments
+                ?: return).video)
         viewModel.listVideo.observe(this, Observer {
             if (it == null) {
                 return@Observer

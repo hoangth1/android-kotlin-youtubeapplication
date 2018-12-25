@@ -5,10 +5,15 @@ import android.arch.lifecycle.Observer
 import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.support.design.widget.BottomNavigationView
 import android.support.v7.widget.SearchView
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseActivity
 import framgia.com.video.youtubevideo.screen.about.AboutFragment
@@ -19,24 +24,28 @@ import framgia.com.video.youtubevideo.screen.video.VideoFragment
 import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListener,
-        BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListener {
     var menuItem: MenuItem? = null
     override fun getLayout(): Int = R.layout.activity_main
     override fun initComponent(savedInstanceState: Bundle?) {
+        val host = nav_host as NavHostFragment
+        val navController = host.navController
+        setUpBottemNavigationMenu(navController)
+        bottom_navigation.let { bottomNavView -> NavigationUI.setupWithNavController(bottomNavView, navController) }
+
         viewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
-        viewModel.isInternetConnected.observe(this, Observer {
-            if (it == true) replaceFragmentNotBackstack(VideoFragment.newInstance(), R.id.container)
-            else showInformationDialog()
-        })
+
         viewModel.checkInternetConnection(Context.CONNECTIVITY_SERVICE)
-        bottom_navigation.setOnNavigationItemSelectedListener(this)
         viewModel.titleMain.observe(this, Observer {
             title = it
         })
         viewModel.isVisibleBackButton.observe(this, Observer {
             if (it == true) showArrowBackButton() else hideArrowBackButton()
         })
+    }
+
+    private fun setUpBottemNavigationMenu(navController: NavController) {
+        NavigationUI.setupWithNavController(bottom_navigation, navController)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -62,7 +71,7 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
     }
 
     private fun showInformationDialog() {
-        val builder = AlertDialog.Builder(this).apply {
+        AlertDialog.Builder(this).apply {
             setTitle(getString(R.string.title_oops))
             setMessage(getString(R.string.msg_connect_internet_failure))
             setCancelable(false)
@@ -72,18 +81,5 @@ class MainActivity : BaseActivity<MainViewModel>(), SearchView.OnQueryTextListen
             }
             create().show()
         }
-
-    }
-
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.item_popular -> replaceFragmentNotBackstack(VideoFragment.newInstance(),
-                    R.id.container)
-            R.id.item_favorite -> replaceFragmentNotBackstack(FavoriteFragment.newInstance(),
-                    R.id.container)
-            R.id.item_about_us -> replaceFragmentNotBackstack(AboutFragment.newInstance(),
-                    R.id.container)
-        }
-        return true
     }
 }
