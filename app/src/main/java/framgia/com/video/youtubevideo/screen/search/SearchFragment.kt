@@ -5,8 +5,11 @@ import android.arch.lifecycle.ViewModelProviders
 import android.content.Context
 import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
 import framgia.com.video.youtubevideo.base.EndlessScrollListener
@@ -16,6 +19,7 @@ import framgia.com.video.youtubevideo.screen.main.MainActivity
 import framgia.com.video.youtubevideo.screen.main.MainViewModel
 import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
 import framgia.com.video.youtubevideo.screen.search.adapter.SearchResultAdapter
+import framgia.com.video.youtubevideo.screen.video.VideoFragmentDirections
 import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
@@ -76,9 +80,9 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
     }
 
     fun playVideo(video: Video) {
-        val mainActivity = activity as MainActivity
-        mainActivity.replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
-                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
+        val directions = SearchFragmentDirections.actionSearchFragmentToPlayVideoFragment4().setVideo(video)
+        Navigation.findNavController(view
+                ?: return).navigate(directions)
     }
 
     fun showPopupMenu(video: Video, view: View) {
@@ -93,10 +97,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding, SearchViewModel>() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
-            android.R.id.home -> fragmentManager?.popBackStack()
+            android.R.id.home -> Navigation.findNavController(view ?: return false).navigateUp()
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun getLayoutResource(): Int = R.layout.fragment_search
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("kiemtra", "runned")
+
+
+    }
 }

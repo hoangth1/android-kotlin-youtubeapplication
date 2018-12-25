@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.view.View
 import android.widget.Toast
+import androidx.navigation.Navigation
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
 import framgia.com.video.youtubevideo.base.EndlessScrollListener
@@ -95,11 +96,9 @@ class VideoFragment : BaseFragment<FragmentVideoBinding, VideoViewModel>(),
 
     override fun getLayoutResource(): Int = R.layout.fragment_video
     override fun onVideoClick(video: Video) {
-        if (activity is MainActivity)
-            (activity as MainActivity).apply {
-                replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
-                        FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
-            }
+        val directions = VideoFragmentDirections.actionVideoFragmentToPlayVideoFragment().setVideo(video)
+        Navigation.findNavController(view
+                ?: return).navigate(directions)
         viewModel.currentPage = ""
     }
 

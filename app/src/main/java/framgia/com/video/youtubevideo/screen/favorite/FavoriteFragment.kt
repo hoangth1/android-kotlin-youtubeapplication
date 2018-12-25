@@ -6,6 +6,7 @@ import android.content.Context
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
+import androidx.navigation.Navigation
 import framgia.com.video.youtubevideo.R
 import framgia.com.video.youtubevideo.base.BaseFragment
 import framgia.com.video.youtubevideo.data.model.Video
@@ -14,6 +15,7 @@ import framgia.com.video.youtubevideo.screen.favorite.adapter.FavoriteAdapter
 import framgia.com.video.youtubevideo.screen.main.MainActivity
 import framgia.com.video.youtubevideo.screen.main.MainViewModel
 import framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment
+import framgia.com.video.youtubevideo.screen.video.VideoFragmentDirections
 import framgia.com.video.youtubevideo.utils.FragmentBackstackConstant
 import framgia.com.video.youtubevideo.utils.initViewModel
 
@@ -59,9 +61,9 @@ class FavoriteFragment : BaseFragment<FragmentFavoriteBinding, FavoriteViewModel
     }
 
     fun playVideo(video: Video) {
-        val mainActivity = activity as MainActivity
-        mainActivity.replaceFragment(PlayVideoFragment.newInstance(video), R.id.container,
-                FragmentBackstackConstant.TAG_PLAY_VIDEO_FRAGMENT)
+        val directions = FavoriteFragmentDirections.actionFavoriteFragmentToPlayVideoFragment().setVideo(video)
+        Navigation.findNavController(view
+                ?: return).navigate(directions)
     }
 
     override fun onRefresh() = viewModel.refreshData()

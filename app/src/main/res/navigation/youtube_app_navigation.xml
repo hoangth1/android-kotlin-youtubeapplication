@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/youtube_app_navigation"
+    app:startDestination="@id/videoFragment">
+
+    <fragment
+        android:id="@+id/videoFragment"
+        android:name="framgia.com.video.youtubevideo.screen.video.VideoFragment"
+        android:label="VideoFragment">
+        <action
+            android:id="@+id/action_videoFragment_to_playVideoFragment"
+            app:destination="@id/playVideoFragment" />
+        <action
+            android:id="@+id/action_videoFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="framgia.com.video.youtubevideo.screen.search.SearchFragment"
+        android:label="SearchFragment">
+        <action
+            android:id="@+id/action_searchFragment_to_playVideoFragment4"
+            app:destination="@id/playVideoFragment" />
+        <argument
+            android:name="video"
+            android:defaultValue="null"
+            app:argType="string" />
+    </fragment>
+    <fragment
+        android:id="@+id/aboutFragment"
+        android:name="framgia.com.video.youtubevideo.screen.about.AboutFragment"
+        android:label="AboutFragment" />
+    <fragment
+        android:id="@+id/playVideoFragment"
+        android:name="framgia.com.video.youtubevideo.screen.playvideo.PlayVideoFragment"
+        android:label="PlayVideoFragment">
+        <argument
+            android:name="video"
+            android:defaultValue="null"
+            app:argType="framgia.com.video.youtubevideo.data.model.Video" />
+    </fragment>
+    <fragment
+        android:id="@+id/favoriteFragment"
+        android:name="framgia.com.video.youtubevideo.screen.favorite.FavoriteFragment"
+        android:label="FavoriteFragment">
+        <action
+            android:id="@+id/action_favoriteFragment_to_playVideoFragment"
+            app:destination="@id/playVideoFragment" />
+        <action
+            android:id="@+id/action_favoriteFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <action
+        android:id="@+id/activity_to_search"
+        app:destination="@id/searchFragment" />
+
+</navigation>
